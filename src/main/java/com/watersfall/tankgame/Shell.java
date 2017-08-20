@@ -5,22 +5,25 @@
  */
 package com.watersfall.tankgame;
 
+import java.awt.Rectangle;
+
 /**
  *
  * @author Christopher
  */
-public class Shell {
+public class Shell extends Rectangle {
     
     private Turret turret;
-    public int x;
-    public int y;
     private double angle;
     
     public Shell(Turret turret)
     {
-        this.turret = turret;
+        super(turret.getX(), turret.getY());
         x = turret.getX();
         y = turret.getY();
+        width = 10;
+        height = 10;
+        this.turret = turret;
         angle = turret.getAngle();
     }
     
@@ -32,6 +35,11 @@ public class Shell {
     
     public boolean outOfBounds()
     {
-        return false;
+        return (x > 1920 || x < 0 || y > 1080 || y < 0);
+    }
+    
+    public boolean checkCollision(Tank tank)
+    {
+        return (tank.intersects(this));
     }
 }

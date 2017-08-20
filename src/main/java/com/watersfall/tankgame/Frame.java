@@ -31,8 +31,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     
     Timer timer;
     Renderer renderer;
-    Tank tank1;
-    Tank tank2;
+    Tank tank1, tank2;
     boolean move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right;
     boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
     Graphics2D g2d;
@@ -47,7 +46,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         
         timer = new Timer(20, this);
         tank1 = new Tank(100, 100, 100, 100, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
-        //tank2 = new Tank(1000, 100);
+        tank2 = new Tank(1000, 100, 100, 100, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
         
         setExtendedState(MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -116,9 +115,19 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             g2d.setColor(Color.yellow);
             g2d.fillRect(shell1.x, shell1.y, 10, 10);
             shell1.move();
+            if(shell1.outOfBounds())
+            {
+                shell1 = null;
+            }
         }
-        //g2d.setColor(Color.green);
-        //g2d.fillRect(tank2.getX(), tank2.getY(), 100, 100);
+        g2d.setColor(Color.green);
+        g2d.fillRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
+        
+        if(shell1 != null && shell1.checkCollision(tank2))
+        {
+            g2d.setColor(Color.pink);
+            g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
+        }
     }
 
     @Override
