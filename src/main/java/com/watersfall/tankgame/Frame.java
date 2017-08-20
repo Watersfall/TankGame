@@ -8,6 +8,7 @@ package com.watersfall.tankgame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -31,16 +36,18 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     boolean move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right;
     boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
     Graphics2D g2d;
+    BufferedImage tank1Image, tank2Image;
+    Shell shell1;
     
-    public Frame()
+    public Frame() throws IOException
     {
         renderer = new Renderer();
         add(renderer);
         addKeyListener(this);
         
         timer = new Timer(20, this);
-        tank1 = new Tank(100, 100);
-        tank2 = new Tank(1000, 100);
+        tank1 = new Tank(100, 100, 100, 100, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
+        //tank2 = new Tank(1000, 100);
         
         setExtendedState(MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,6 +66,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public void repaint(Graphics g)
     {
         g2d = (Graphics2D)g;
+        Point p = tank1.getPoint();
+        
         
         if(move1Forward)
         {
@@ -89,7 +98,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.setColor(Color.red);
         AffineTransform transform = new AffineTransform();
         transform.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + 50, tank1.getY() + 50);
-        Shape transformed = transform.createTransformedShape(new Rectangle(tank1.getX(), tank1.getY(), 100, 100));
+        transform.translate(WIDTH, WIDTH);
+        Shape transformed = transform.createTransformedShape(new Rectangle((int)tank1.getX(), (int)tank1.getY(), 100, 100));
         g2d.fill(transformed);
         
         //First Turret
@@ -99,6 +109,14 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         transformed = transform.createTransformedShape(new Rectangle(tank1.getTurret().getX(), tank1.getTurret().getY(), 50, 50));
         g2d.fill(transformed);
         
+        
+        
+        if(shell1 != null)
+        {
+            g2d.setColor(Color.yellow);
+            g2d.fillRect(shell1.x, shell1.y, 10, 10);
+            shell1.move();
+        }
         //g2d.setColor(Color.green);
         //g2d.fillRect(tank2.getX(), tank2.getY(), 100, 100);
     }
@@ -135,6 +153,10 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(e.getKeyChar() == 'p')
         {
             turret1RotateRight = true;
+        }
+        if(e.getKeyChar() == 'i')
+        {
+            shell1 = new Shell(tank1.getTurret());
         }
     }
 

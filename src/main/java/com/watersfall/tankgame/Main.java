@@ -5,6 +5,8 @@
  */
 package com.watersfall.tankgame;
 
+import java.io.IOException;
+
 /**
  *
  * @author Christopher
@@ -12,7 +14,7 @@ package com.watersfall.tankgame;
 public class Main {
     
     public static Frame frame;
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         frame = new Frame();
     }

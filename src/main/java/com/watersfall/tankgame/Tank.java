@@ -6,32 +6,37 @@
 package com.watersfall.tankgame;
 
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 /**
  *
  * @author Christopher
  */
-public class Tank {
+public class Tank extends Rectangle {
     
-    private Point p;
     private double angle;
     private Turret turret;
+    private BufferedImage image;
+    private Point p;
     
-    public Tank(int x, int y)
+    public Tank(int x, int y, int height, int width, BufferedImage image)
     {
+        super(x, y, height, width);
         p = new Point(x, y);
-        angle = 90;
+        angle = 0;
         turret = new Turret(angle, p);
+        this.image = image;
     }
     
-    public int getX()
+    public double getX()
     {
-        return p.x;
+        return x;
     }
     
-    public int getY()
+    public double getY()
     {
-        return p.y;
+        return y;
     }
     
     public double getAngle()
@@ -39,18 +44,23 @@ public class Tank {
         return angle;
     }
     
+    public Point getPoint()
+    {
+        return p;
+    }
+    
     public void moveForward()
     {
-        p.x = p.x + (int)(Math.cos(Math.toRadians(angle)) * 10);
-        p.y = p.y + (int)(Math.sin(Math.toRadians(angle)) * 10);
-        turret.setLocation(new Point(p.x + 25, p.y + 25));
+        x = x + (int)(Math.cos(Math.toRadians(angle)) * 10);
+        y = y + (int)(Math.sin(Math.toRadians(angle)) * 10);
+        turret.setLocation(new Point(x + 25, y + 25));
     }
     
     public void moveBack()
     {
-        p.x = p.x - (int)(Math.cos(Math.toRadians(angle)) * 10);
-        p.y = p.y - (int)(Math.sin(Math.toRadians(angle)) * 10);
-        turret.setLocation(new Point(p.x + 25, p.y + 25));
+        x = x - (int)(Math.cos(Math.toRadians(angle)) * 10);
+        y = y - (int)(Math.sin(Math.toRadians(angle)) * 10);
+        turret.setLocation(new Point(x + 25, y + 25));
     }
     
     public void turnRight()
@@ -66,6 +76,11 @@ public class Tank {
     public Turret getTurret()
     {
         return turret;
+    }
+    
+    public BufferedImage getImage()
+    {
+        return image;
     }
     
 }
