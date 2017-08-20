@@ -21,5 +21,37 @@ public class Turret {
     {
         this.angle = angle;
         this.p = p;
+        p.x = p.x + 25;
+        p.y = p.y + 25;
+    }
+    
+    public void turnLeft()
+    {
+        angle = angle - 4;
+    }
+    
+    public void turnRight()
+    {
+        angle = angle + 4;
+    }
+    
+    public void setLocation(Point p)
+    {
+        this.p = p;
+    }
+    
+    public double getAngle()
+    {
+        return angle;
+    }
+    
+    public int getX()
+    {
+        return p.x;
+    }
+    
+    public int getY()
+    {
+        return p.y;
     }
 }

@@ -15,11 +15,13 @@ public class Tank {
     
     private Point p;
     private double angle;
+    private Turret turret;
     
     public Tank(int x, int y)
     {
         p = new Point(x, y);
         angle = 90;
+        turret = new Turret(angle, p);
     }
     
     public int getX()
@@ -41,12 +43,14 @@ public class Tank {
     {
         p.x = p.x + (int)(Math.cos(Math.toRadians(angle)) * 10);
         p.y = p.y + (int)(Math.sin(Math.toRadians(angle)) * 10);
+        turret.setLocation(new Point(p.x + 25, p.y + 25));
     }
     
     public void moveBack()
     {
         p.x = p.x - (int)(Math.cos(Math.toRadians(angle)) * 10);
         p.y = p.y - (int)(Math.sin(Math.toRadians(angle)) * 10);
+        turret.setLocation(new Point(p.x + 25, p.y + 25));
     }
     
     public void turnRight()
@@ -58,4 +62,10 @@ public class Tank {
     {
         angle = angle - 4;
     }
+    
+    public Turret getTurret()
+    {
+        return turret;
+    }
+    
 }
