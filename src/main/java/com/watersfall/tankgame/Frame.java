@@ -36,7 +36,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
     Graphics2D g2d;
     BufferedImage tank1Image, tank2Image;
-    Shell shell1;
+    Shell shell1, shell2;
     
     public Frame() throws IOException
     {
@@ -92,8 +92,32 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             tank1.getTurret().turnRight();
         }
+        if(move2Forward)
+        {
+            tank2.moveForward();
+        }
+        if(move2Back)
+        {
+            tank2.moveBack();
+        }
+        if(turn2Left)
+        {
+            tank2.turnLeft();
+        }
+        if(turn2Right)
+        {
+            tank2.turnRight();
+        }
+        if(turret2RotateLeft)
+        {
+            tank2.getTurret().turnLeft();
+        }
+        if(turret2RotateRight)
+        {
+            tank2.getTurret().turnRight();
+        }
         
-        //First Tank
+        //Tank 1
         g2d.setColor(Color.red);
         AffineTransform transform = new AffineTransform();
         transform.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + 50, tank1.getY() + 50);
@@ -101,15 +125,14 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         Shape transformed = transform.createTransformedShape(new Rectangle((int)tank1.getX(), (int)tank1.getY(), 100, 100));
         g2d.fill(transformed);
         
-        //First Turret
+        //Tank 1 Turret
         g2d.setColor(Color.blue);
         transform = new AffineTransform();
         transform.rotate(Math.toRadians(tank1.getTurret().getAngle()), tank1.getX() + 50, tank1.getY() + 50);
         transformed = transform.createTransformedShape(new Rectangle(tank1.getTurret().getX(), tank1.getTurret().getY(), 50, 50));
         g2d.fill(transformed);
         
-        
-        
+        //Tank 1 shell
         if(shell1 != null)
         {
             g2d.setColor(Color.yellow);
@@ -120,13 +143,45 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 shell1 = null;
             }
         }
-        g2d.setColor(Color.green);
-        g2d.fillRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
         
+        //Tank 2 
+        g2d.setColor(Color.green);
+        transform = new AffineTransform();
+        transform.rotate(Math.toRadians(tank2.getAngle()), tank2.getX() + 50, tank2.getY() + 50);
+        transform.translate(WIDTH, WIDTH);
+        transformed = transform.createTransformedShape(new Rectangle((int)tank2.getX(), (int)tank2.getY(), 100, 100));
+        g2d.fill(transformed);
+        
+        //Tank 2 Turret
+        g2d.setColor(Color.orange);
+        transform = new AffineTransform();
+        transform.rotate(Math.toRadians(tank2.getTurret().getAngle()), tank2.getX() + 50, tank2.getY() + 50);
+        transformed = transform.createTransformedShape(new Rectangle(tank2.getTurret().getX(), tank2.getTurret().getY(), 50, 50));
+        g2d.fill(transformed);
+        
+        //Tank 2 shell
+        if(shell2 != null)
+        {
+            g2d.setColor(Color.yellow);
+            g2d.fillRect(shell2.x, shell2.y, 10, 10);
+            shell2.move();
+            if(shell2.outOfBounds())
+            {
+                shell2 = null;
+            }
+        }
+        
+        //
         if(shell1 != null && shell1.checkCollision(tank2))
         {
             g2d.setColor(Color.pink);
             g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
+        }
+        
+        if(shell2 != null && shell2.checkCollision(tank1))
+        {
+            g2d.setColor(Color.pink);
+            g2d.drawRect((int)tank1.getX(), (int)tank1.getY(), 100, 100);
         }
     }
 
@@ -163,9 +218,37 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             turret1RotateRight = true;
         }
-        if(e.getKeyChar() == 'i')
+        if(e.getKeyCode() == 32)
         {
             shell1 = new Shell(tank1.getTurret());
+        }
+        if(e.getKeyCode() == 38)
+        {
+            move2Forward = true;
+        }
+        if(e.getKeyCode() == 37)
+        {
+            turn2Left = true;
+        }
+        if(e.getKeyCode() == 40)
+        {
+            move2Back = true;
+        }
+        if(e.getKeyCode() == 39)
+        {
+            turn2Right = true;
+        }
+        if(e.getKeyCode() == 98)
+        {
+            turret2RotateLeft = true;
+        }
+        if(e.getKeyCode() == 99)
+        {
+            turret2RotateRight = true;
+        }
+        if(e.getKeyCode() == 97)
+        {
+            shell2 = new Shell(tank2.getTurret());
         }
     }
 
@@ -195,6 +278,30 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(e.getKeyChar() == 'p')
         {
             turret1RotateRight = false;
+        }
+        if(e.getKeyCode() == 38)
+        {
+            move2Forward = false;
+        }
+        if(e.getKeyCode() == 37)
+        {
+            turn2Left = false;
+        }
+        if(e.getKeyCode() == 40)
+        {
+            move2Back = false;
+        }
+        if(e.getKeyCode() == 39)
+        {
+            turn2Right = false;
+        }
+        if(e.getKeyCode() == 98)
+        {
+            turret2RotateLeft = false;
+        }
+        if(e.getKeyCode() == 99)
+        {
+            turret2RotateRight = false;
         }
     }
 }
