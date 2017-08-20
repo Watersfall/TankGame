@@ -18,9 +18,9 @@ public class Shell extends Rectangle {
     
     public Shell(Turret turret)
     {
-        super(turret.getX(), turret.getY());
-        x = turret.getX();
-        y = turret.getY();
+        super((int)turret.getCenterX(), (int)turret.getCenterY());
+        x = (int)turret.getCenterX();
+        y = (int)turret.getCenterY();
         width = 10;
         height = 10;
         this.turret = turret;

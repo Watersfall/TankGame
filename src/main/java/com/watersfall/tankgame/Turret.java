@@ -5,24 +5,26 @@
  */
 package com.watersfall.tankgame;
 
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 /**
  *
  * @author Christopher
  */
-public class Turret {
+public class Turret extends Rectangle{
     
     
     double angle;
-    Point p;
+    private Image image;
     
-    public Turret(Double angle, Point p)
+    public Turret(int x, int y, int height, int width, BufferedImage image)
     {
-        this.angle = angle;
-        this.p = p;
-        p.x = p.x + 25;
-        p.y = p.y + 25;
+        super(x, y, height, width);
+        angle = 0;
+        this.image = image;
     }
     
     public void turnLeft()
@@ -37,7 +39,8 @@ public class Turret {
     
     public void setLocation(Point p)
     {
-        this.p = p;
+        this.x = p.x;
+        this.y = p.y;
     }
     
     public double getAngle()
@@ -45,13 +48,8 @@ public class Turret {
         return angle;
     }
     
-    public int getX()
+    public Image getImage()
     {
-        return p.x;
-    }
-    
-    public int getY()
-    {
-        return p.y;
+        return image;
     }
 }

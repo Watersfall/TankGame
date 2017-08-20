@@ -9,6 +9,9 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -21,12 +24,12 @@ public class Tank extends Rectangle {
     private Image image;
     private Point p;
     
-    public Tank(int x, int y, int height, int width, BufferedImage image)
+    public Tank(int x, int y, int height, int width, BufferedImage image) throws IOException
     {
         super(x, y, height, width);
         p = new Point(x, y);
         angle = 0;
-        turret = new Turret(angle, p);
+        turret = new Turret(x, y, height / 2, width / 2, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1TURRET.png")));
         this.image = image;
     }
     
