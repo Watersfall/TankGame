@@ -5,6 +5,7 @@
  */
 package com.watersfall.tankgame;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -17,7 +18,7 @@ public class Tank extends Rectangle {
     
     private double angle;
     private Turret turret;
-    private BufferedImage image;
+    private Image image;
     private Point p;
     
     public Tank(int x, int y, int height, int width, BufferedImage image)
@@ -78,7 +79,7 @@ public class Tank extends Rectangle {
         return turret;
     }
     
-    public BufferedImage getImage()
+    public Image getImage()
     {
         return image;
     }

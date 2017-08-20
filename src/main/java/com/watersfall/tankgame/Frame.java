@@ -8,6 +8,7 @@ package com.watersfall.tankgame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -29,13 +30,14 @@ import javax.swing.Timer;
  */
 public class Frame extends JFrame implements ActionListener, KeyListener {
     
-    Timer timer;
+    final int delay = 16; //Closest to 60fps I can get
+    Timer timer; 
     Renderer renderer;
     Tank tank1, tank2;
     boolean move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right;
     boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
     Graphics2D g2d;
-    BufferedImage tank1Image, tank2Image;
+    Image tank1Image, tank2Image; 
     Shell shell1, shell2;
     
     public Frame() throws IOException
@@ -44,7 +46,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         add(renderer);
         addKeyListener(this);
         
-        timer = new Timer(20, this);
+        timer = new Timer(16, this);
         tank1 = new Tank(100, 100, 100, 100, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
         tank2 = new Tank(1000, 100, 100, 100, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
         
@@ -118,12 +120,17 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
         
         //Tank 1
-        g2d.setColor(Color.red);
+        //g2d.setColor(Color.red);
         AffineTransform transform = new AffineTransform();
         transform.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + 50, tank1.getY() + 50);
-        transform.translate(WIDTH, WIDTH);
         Shape transformed = transform.createTransformedShape(new Rectangle((int)tank1.getX(), (int)tank1.getY(), 100, 100));
         g2d.fill(transformed);
+        AffineTransform old = g2d.getTransform();
+        g2d.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + 50, tank1.getY() + 50);
+        g2d.drawImage(tank1.getImage(), (int)tank1.getX(), (int)tank1.getY(), 100, 100, renderer);
+        g2d.setTransform(old);
+        
+        
         
         //Tank 1 Turret
         g2d.setColor(Color.blue);
@@ -131,6 +138,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         transform.rotate(Math.toRadians(tank1.getTurret().getAngle()), tank1.getX() + 50, tank1.getY() + 50);
         transformed = transform.createTransformedShape(new Rectangle(tank1.getTurret().getX(), tank1.getTurret().getY(), 50, 50));
         g2d.fill(transformed);
+        
         
         //Tank 1 shell
         if(shell1 != null)
@@ -151,6 +159,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         transform.translate(WIDTH, WIDTH);
         transformed = transform.createTransformedShape(new Rectangle((int)tank2.getX(), (int)tank2.getY(), 100, 100));
         g2d.fill(transformed);
+        old = g2d.getTransform();
+        g2d.rotate(Math.toRadians(tank2.getAngle()), tank2.getX() + 50, tank2.getY() + 50);
+        g2d.drawImage(tank1.getImage(), (int)tank2.getX(), (int)tank2.getY(), 100, 100, renderer);
+        g2d.setTransform(old);
+        
         
         //Tank 2 Turret
         g2d.setColor(Color.orange);
