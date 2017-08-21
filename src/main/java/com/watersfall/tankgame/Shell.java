@@ -6,6 +6,9 @@
 package com.watersfall.tankgame;
 
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -19,7 +22,7 @@ public class Shell extends Rectangle {
     public Shell(Turret turret)
     {
         super((int)turret.getCenterX(), (int)turret.getCenterY());
-        x = (int)turret.getCenterX();
+        x = (int)(turret.getX() + turret.getWidth());
         y = (int)turret.getCenterY();
         width = 10;
         height = 10;
@@ -40,6 +43,9 @@ public class Shell extends Rectangle {
     
     public boolean checkCollision(Tank tank)
     {
-        return (tank.intersects(this));
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(Math.toRadians(tank.getAngle()), tank.getCenterX(), tank.getCenterY());
+        Shape shape = transform.createTransformedShape(tank);
+        return shape.intersects(this);
     }
 }

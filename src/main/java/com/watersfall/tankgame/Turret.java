@@ -5,7 +5,6 @@
  */
 package com.watersfall.tankgame;
 
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;

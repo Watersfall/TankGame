@@ -30,6 +30,7 @@ public class Tank extends Rectangle {
         angle = 0;
         turret = new Turret(x, y, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1TURRET.png")));
         this.image = image;
+        turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
     }
     
     public double getX()
