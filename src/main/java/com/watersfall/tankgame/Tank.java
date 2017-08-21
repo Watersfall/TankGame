@@ -22,14 +22,13 @@ public class Tank extends Rectangle {
     private double angle;
     private Turret turret;
     private Image image;
-    private Point p;
     
     public Tank(int x, int y, int height, int width, BufferedImage image) throws IOException
     {
-        super(x, y, height, width);
-        p = new Point(x, y);
+        super(x, y, width, height);
+        Rectangle r = new Rectangle();
         angle = 0;
-        turret = new Turret(x, y, height / 2, width / 2, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1TURRET.png")));
+        turret = new Turret(x, y, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1TURRET.png")));
         this.image = image;
     }
     
@@ -48,23 +47,18 @@ public class Tank extends Rectangle {
         return angle;
     }
     
-    public Point getPoint()
-    {
-        return p;
-    }
-    
     public void moveForward()
     {
         x = x + (int)(Math.cos(Math.toRadians(angle)) * 10);
         y = y + (int)(Math.sin(Math.toRadians(angle)) * 10);
-        turret.setLocation(new Point(x + 25, y + 25));
+        turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
     }
     
     public void moveBack()
     {
         x = x - (int)(Math.cos(Math.toRadians(angle)) * 10);
         y = y - (int)(Math.sin(Math.toRadians(angle)) * 10);
-        turret.setLocation(new Point(x + 25, y + 25));
+        turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
     }
     
     public void turnRight()
@@ -85,6 +79,5 @@ public class Tank extends Rectangle {
     public Image getImage()
     {
         return image;
-    }
-    
+    } 
 }

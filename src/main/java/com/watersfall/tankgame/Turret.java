@@ -18,11 +18,11 @@ public class Turret extends Rectangle{
     
     
     double angle;
-    private Image image;
+    private BufferedImage image;
     
-    public Turret(int x, int y, int height, int width, BufferedImage image)
+    public Turret(int x, int y, BufferedImage image)
     {
-        super(x, y, height, width);
+        super(x, y, image.getWidth(), image.getHeight());
         angle = 0;
         this.image = image;
     }
@@ -48,7 +48,7 @@ public class Turret extends Rectangle{
         return angle;
     }
     
-    public Image getImage()
+    public BufferedImage getImage()
     {
         return image;
     }
