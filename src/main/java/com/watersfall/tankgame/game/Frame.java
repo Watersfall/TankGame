@@ -174,14 +174,14 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
 
         //
-        if(shell1 != null && shell1.checkCollision(tank2))
+        if(shell1 != null && shell1.checkCollision(tank2) && shell1.checkPenetration(tank2))
         {
             g2d.setColor(Color.pink);
             g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
             tank2.destroy();
         }
 
-        if(shell2 != null && shell2.checkCollision(tank1))
+        if(shell2 != null && shell2.checkCollision(tank1) && shell2.checkPenetration(tank1))
         {
             g2d.setColor(Color.pink);
             g2d.drawRect((int)tank1.getX(), (int)tank1.getY(), 100, 100);
@@ -328,8 +328,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         Image tank1Image, tank2Image; 
         Shell shell1, shell2;*/
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
-        tank2 = new Tank(Main.frame.getWidth() - 100 - tank2.width, Main.frame.getHeight() - 100 - tank2.height, 128, 256, 180, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
+        tank1 = new Tank(100, 100, 128, 256, 0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1.png")));
+        tank2 = new Tank(Main.frame.getWidth() - 100 - tank2.width, Main.frame.getHeight() - 100 - tank2.height, 128, 256, 180, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1.png")));
         move1Forward = false;
         move2Forward = false;
         move1Back = false;
