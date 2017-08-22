@@ -12,7 +12,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,7 @@ public class Tank extends Rectangle implements ActionListener{
         gameOverTimer = new Timer(2500, this);
         Rectangle r = new Rectangle();
         this.angle = angle;
-        turret = new Turret(x, y, angle, ImageIO.read(getClass().getResourceAsStream("/TANK1TURRET.png")));
+        turret = new Turret(x, y, angle, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1TURRET.png")));
         this.image = image;
         turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
     }
