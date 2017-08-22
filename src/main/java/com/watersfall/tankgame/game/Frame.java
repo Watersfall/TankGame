@@ -51,7 +51,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         addKeyListener(this);
         
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1.png")));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK0.png")));
         tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1.png")));
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -227,7 +227,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
         if(e.getKeyCode() == 32)
         {
-            if(tank1.getTurret().canShoot)
+            //if(tank1.getTurret().canShoot)
             {
                 shell1 = new Shell(tank1.getTurret());
                 tank1.getTurret().shoot();

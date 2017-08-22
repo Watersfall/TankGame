@@ -20,11 +20,11 @@ public class Shell extends Rectangle {
     
     public Shell(Turret turret)
     {
-        super((int)turret.getCenterX(), (int)turret.getCenterY());
+        super();
         this.turret = turret;
         angle = turret.getAngle();
-        x = (int)(turret.getCenterX() + (turret.getWidth() / 2 * Math.cos(Math.toRadians(angle))));
-        y = (int)(turret.getCenterY() + (turret.getHeight() * Math.sin(Math.toRadians(angle))));
+        x = (int)(turret.getCenterX() + ((turret.getWidth() / 2) * Math.cos(Math.toRadians(angle))));
+        y = (int)(turret.getCenterY() + ((turret.getWidth() / 2) * Math.sin(Math.toRadians(angle))));
         width = 10;
         height = 10;
         

@@ -33,7 +33,6 @@ public class Tank extends Rectangle implements ActionListener{
     {
         super(x, y, width, height);
         gameOverTimer = new Timer(2500, this);
-        Rectangle r = new Rectangle();
         this.angle = angle;
         turret = new Turret(x, y, angle, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1TURRET.png")));
         this.image = image;
