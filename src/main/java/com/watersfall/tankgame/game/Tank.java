@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
 /**
@@ -29,12 +28,12 @@ public class Tank extends Rectangle implements ActionListener{
     private Image image;
     private Timer gameOverTimer;
     
-    public Tank(int x, int y, int height, int width, double angle, BufferedImage image) throws IOException
+    public Tank(int x, int y, int height, int width, double angle, BufferedImage image, BufferedImage turretImage) throws IOException
     {
         super(x, y, width, height);
         gameOverTimer = new Timer(2500, this);
         this.angle = angle;
-        turret = new Turret(x, y, angle, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1TURRET.png")));
+        turret = new Turret(x, y, angle, turretImage);
         this.image = image;
         turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
     }
@@ -67,11 +66,11 @@ public class Tank extends Rectangle implements ActionListener{
         {
             y += 10;
         }
-        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.frame.getWidth())
+        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
         {
             x -= 10;
         }
-        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.frame.getHeight())
+        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
         {
             y -= 10;
         }

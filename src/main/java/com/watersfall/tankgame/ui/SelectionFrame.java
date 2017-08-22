@@ -5,6 +5,7 @@
  */
 package com.watersfall.tankgame.ui;
 
+import com.watersfall.tankgame.game.Frame;
 import data.TankData;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -24,10 +27,15 @@ import javax.swing.JPanel;
  */
 public class SelectionFrame extends JFrame {
     
+    //The things that will be added to the frame
     private JComboBox player1Box, player2Box;
     private JLabel player1, player2, player1Info, player2Info;
     private JPanel panel;
     private JButton start;
+    public Frame frame;
+    
+    //The things that will be passed into the main game
+    private int player1Selection, player2Selection;
     private ArrayList<TankData> tankArray;
     
     public SelectionFrame() throws IOException
@@ -83,7 +91,17 @@ public class SelectionFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                
+                player1Selection = player1Box.getSelectedIndex();
+                player2Selection = player2Box.getSelectedIndex();
+                setVisible(false);
+                try 
+                {
+                    frame = new Frame(player1Selection, player2Selection, tankArray);
+                } 
+                catch (IOException ex) 
+                {
+                    Logger.getLogger(SelectionFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 

@@ -23,7 +23,7 @@ public class Renderer extends JPanel {
         super.paintComponent(g);
         try 
         {
-            Main.frame.repaint(g);
+            Main.selectionFrame.frame.repaint(g);
         } 
         catch (InterruptedException | IOException ex) 
         {

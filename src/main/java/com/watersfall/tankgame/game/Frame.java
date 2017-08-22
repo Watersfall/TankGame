@@ -6,6 +6,7 @@
 package com.watersfall.tankgame.game;
 
 import com.watersfall.tankgame.Main;
+import data.TankData;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,8 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
-import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -39,9 +40,12 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     Graphics2D g2d;
     Image tank1Image, tank2Image; 
     Shell shell1, shell2;
+    int player1, player2;
     
-    public Frame() throws IOException
+    public Frame(int player1, int player2, ArrayList<TankData> tanks) throws IOException
     {
+        this.player1 = player1;
+        this.player2 = player2;
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         final int screen_Width = dim.width;
         final int screen_Height = dim.height;
@@ -51,8 +55,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         addKeyListener(this);
         
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK0.png")));
-        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1.png")));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")));
+        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")));
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -134,7 +138,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //Tank 1 Turret
         old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank1.getTurret().getAngle()), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
-        g2d.drawImage(tank2.getTurret().getImage(), tank1.getTurret().x, tank1.getTurret().y, renderer);
+        g2d.drawImage(tank1.getTurret().getImage(), tank1.getTurret().x, tank1.getTurret().y, renderer);
         g2d.setTransform(old);
 
         //Tank 1 shell
@@ -327,9 +331,12 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         Graphics2D g2d;
         Image tank1Image, tank2Image; 
         Shell shell1, shell2;*/
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        final int screen_Width = dim.width;
+        final int screen_Height = dim.height;
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1.png")));
-        tank2 = new Tank(Main.frame.getWidth() - 100 - tank2.width, Main.frame.getHeight() - 100 - tank2.height, 128, 256, 180, ImageIO.read(getClass().getResourceAsStream("/Images/TANK1.png")));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")));
+        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")));
         move1Forward = false;
         move2Forward = false;
         move1Back = false;

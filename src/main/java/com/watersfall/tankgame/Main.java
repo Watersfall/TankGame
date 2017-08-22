@@ -19,7 +19,7 @@ public class Main {
     public static SelectionFrame selectionFrame;
     public static void main(String[] args) throws IOException
     {
-        frame = new Frame();
-        //selectionFrame = new SelectionFrame();
+        //frame = new Frame();
+        selectionFrame = new SelectionFrame();
     }
 }
