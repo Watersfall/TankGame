@@ -1,7 +1,7 @@
-C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\Tank.java
 C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\Main.java
-C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\Obstacle.java
-C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\Frame.java
-C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\Renderer.java
-C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\Turret.java
-C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\Shell.java
+C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\game\Turret.java
+C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\game\Frame.java
+C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\game\Tank.java
+C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\game\Renderer.java
+C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\game\Shell.java
+C:\Users\Christopher\Documents\NetBeans\TankGame\src\main\java\com\watersfall\tankgame\game\Obstacle.java

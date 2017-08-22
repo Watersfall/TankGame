@@ -3,27 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.watersfall.tankgame;
+package com.watersfall.tankgame.game;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import javax.swing.Timer;
 
 /**
  *
  * @author Christopher
  */
-public class Turret extends Rectangle{
+public class Turret extends Rectangle implements ActionListener {
     
     
     double angle;
     private BufferedImage image;
+    public boolean canShoot;
+    private Timer reloadTimer;
     
-    public Turret(int x, int y, BufferedImage image)
+    public Turret(int x, int y, double angle, BufferedImage image)
     {
         super(x, y, image.getWidth(), image.getHeight());
-        angle = 0;
+        this.angle = angle;
         this.image = image;
+        canShoot = true;
+        reloadTimer = new Timer(5000, this);
     }
     
     public void turnLeft()
@@ -50,5 +57,17 @@ public class Turret extends Rectangle{
     public BufferedImage getImage()
     {
         return image;
+    }
+    
+    public void shoot()
+    {
+        reloadTimer.start();
+        canShoot = false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        canShoot = true;
+        reloadTimer.stop();
     }
 }

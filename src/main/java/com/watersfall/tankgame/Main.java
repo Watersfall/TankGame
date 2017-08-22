@@ -5,6 +5,7 @@
  */
 package com.watersfall.tankgame;
 
+import com.watersfall.tankgame.game.Frame;
 import java.io.IOException;
 
 /**

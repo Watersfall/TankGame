@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.watersfall.tankgame;
+package com.watersfall.tankgame.game;
 
+import com.watersfall.tankgame.Main;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -26,6 +29,7 @@ import javax.swing.Timer;
  */
 public class Frame extends JFrame implements ActionListener, KeyListener {
     
+    public static boolean gameOver = false;
     final int delay = 16; //Closest to 60fps I can get
     Timer timer; 
     Renderer renderer;
@@ -38,16 +42,22 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     
     public Frame() throws IOException
     {
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        final int screen_Width = dim.width;
+        final int screen_Height = dim.height;
+        setSize(screen_Width , screen_Height);
         renderer = new Renderer();
         add(renderer);
         addKeyListener(this);
         
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
-        tank2 = new Tank(1000, 100, 128, 256, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/TANK1.png")));
+        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/TANK1.png")));
         
-        setExtendedState(MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setUndecorated(true);
+        pack();
+        setExtendedState(Frame.MAXIMIZED_BOTH);
         setVisible(true);
         
         timer.start();
@@ -60,11 +70,12 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         renderer.repaint();
     }
     
-    public void repaint(Graphics g)
+    public void repaint(Graphics g) throws InterruptedException, IOException
     {
         g2d = (Graphics2D)g;
-        
-        
+        g2d.setColor(Color.GREEN.darker());
+        g2d.fillRect(0, 0, 1920, 1080);
+
         if(move1Forward)
         {
             tank1.moveForward();
@@ -113,23 +124,23 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             tank2.getTurret().turnRight();
         }
-        
+
         //Tank 1
         AffineTransform old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
         g2d.drawImage(tank1.getImage(), (int)tank1.getX(), (int)tank1.getY(), tank1.width, tank1.height, renderer);
         g2d.setTransform(old);
-        
+
         //Tank 1 Turret
         old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank1.getTurret().getAngle()), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
         g2d.drawImage(tank2.getTurret().getImage(), tank1.getTurret().x, tank1.getTurret().y, renderer);
         g2d.setTransform(old);
-        
+
         //Tank 1 shell
         if(shell1 != null)
         {
-            g2d.setColor(Color.yellow);
+            g2d.setColor(Color.RED);
             g2d.fillRect(shell1.x, shell1.y, 10, 10);
             shell1.move();
             if(shell1.outOfBounds())
@@ -137,23 +148,23 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 shell1 = null;
             }
         }
-        
+
         //Tank 2 
         old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank2.getAngle()), tank2.getX() + tank2.width / 2, tank2.getY() + tank2.height / 2);
         g2d.drawImage(tank2.getImage(), (int)tank2.getX(), (int)tank2.getY(), tank2.width, tank2.height, renderer);
         g2d.setTransform(old);     
-        
+
         //Tank 2 Turret
         old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank2.getTurret().getAngle()), tank2.getX() + tank2.width / 2, tank2.getY() + tank2.height / 2);
         g2d.drawImage(tank2.getTurret().getImage(), tank2.getTurret().x, tank2.getTurret().y, renderer);
         g2d.setTransform(old);
-        
+
         //Tank 2 shell
         if(shell2 != null)
         {
-            g2d.setColor(Color.yellow);
+            g2d.setColor(Color.RED);
             g2d.fillRect(shell2.x, shell2.y, 10, 10);
             shell2.move();
             if(shell2.outOfBounds())
@@ -161,25 +172,30 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 shell2 = null;
             }
         }
-        
+
         //
         if(shell1 != null && shell1.checkCollision(tank2))
         {
             g2d.setColor(Color.pink);
             g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
+            tank2.destroy();
         }
-        
+
         if(shell2 != null && shell2.checkCollision(tank1))
         {
             g2d.setColor(Color.pink);
             g2d.drawRect((int)tank1.getX(), (int)tank1.getY(), 100, 100);
+            tank1.destroy();
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) 
     {
-        //This isn't needed
+        if(e.getKeyChar() == '')
+        {
+            System.exit(0);
+        }
     }
 
     @Override
@@ -211,7 +227,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
         if(e.getKeyCode() == 32)
         {
-            shell1 = new Shell(tank1.getTurret());
+            if(tank1.getTurret().canShoot)
+            {
+                shell1 = new Shell(tank1.getTurret());
+                tank1.getTurret().shoot();
+            }
         }
         if(e.getKeyCode() == 38)
         {
@@ -239,7 +259,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
         if(e.getKeyCode() == 97)
         {
-            shell2 = new Shell(tank2.getTurret());
+            if(tank2.getTurret().canShoot)
+            {
+                shell2 = new Shell(tank2.getTurret());
+                tank2.getTurret().shoot();
+            }
         }
     }
 
@@ -294,5 +318,27 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             turret2RotateRight = false;
         }
+    }
+    
+    public void reset() throws InterruptedException, IOException
+    {
+        /*boolean move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right;
+        boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
+        Graphics2D g2d;
+        Image tank1Image, tank2Image; 
+        Shell shell1, shell2;*/
+        timer = new Timer(16, this);
+        tank1 = new Tank(100, 100, 128, 256, 0, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
+        tank2 = new Tank(Main.frame.getWidth() - 100 - tank2.width, Main.frame.getHeight() - 100 - tank2.height, 128, 256, 180, ImageIO.read(new File("C:\\Users\\Christopher\\Desktop\\TANK1.png")));
+        move1Forward = false;
+        move2Forward = false;
+        move1Back = false;
+        move2Back = false;
+        turn1Left = false;
+        turn1Right = false;
+        turn2Left = false;
+        turn2Right = false;
+        shell1 = null;
+        shell2 = null;
     }
 }

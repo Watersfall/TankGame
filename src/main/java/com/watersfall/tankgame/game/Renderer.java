@@ -3,9 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.watersfall.tankgame;
+package com.watersfall.tankgame.game;
 
+import com.watersfall.tankgame.Main;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -17,6 +21,13 @@ public class Renderer extends JPanel {
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        Main.frame.repaint(g);
+        try 
+        {
+            Main.frame.repaint(g);
+        } 
+        catch (InterruptedException | IOException ex) 
+        {
+            Logger.getLogger(Renderer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

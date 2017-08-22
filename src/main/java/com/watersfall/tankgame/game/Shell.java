@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.watersfall.tankgame;
+package com.watersfall.tankgame.game;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -22,12 +21,14 @@ public class Shell extends Rectangle {
     public Shell(Turret turret)
     {
         super((int)turret.getCenterX(), (int)turret.getCenterY());
-        x = (int)(turret.getX() + turret.getWidth());
-        y = (int)turret.getCenterY();
-        width = 10;
-        height = 10;
         this.turret = turret;
         angle = turret.getAngle();
+        x = (int)(turret.getCenterX() + (turret.getWidth() / 2 * Math.cos(Math.toRadians(angle))));
+        y = (int)(turret.getCenterY() + (turret.getHeight() * Math.sin(Math.toRadians(angle))));
+        width = 10;
+        height = 10;
+        
+        
     }
     
     public void move()
