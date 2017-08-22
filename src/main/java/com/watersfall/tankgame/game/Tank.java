@@ -140,7 +140,7 @@ public class Tank extends Rectangle implements ActionListener{
     public void actionPerformed(ActionEvent e) 
     {
         try {
-            Main.frame.reset();
+            Main.selectionFrame.frame.reset();
             gameOverTimer.stop();
         } catch (InterruptedException ex) {
             Logger.getLogger(Tank.class.getName()).log(Level.SEVERE, null, ex);
