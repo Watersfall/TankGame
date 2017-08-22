@@ -34,6 +34,7 @@ public class Tank extends Rectangle implements ActionListener{
     {
         super(x, y, width, height);
         frontArmor = java.lang.Double.parseDouble(data.tankData[1]);
+        System.out.println(frontArmor);
         sideArmor = java.lang.Double.parseDouble(data.tankData[2]);
         rearArmor = java.lang.Double.parseDouble(data.tankData[3]);
         penetration = java.lang.Double.parseDouble(data.tankData[4]);
@@ -107,13 +108,13 @@ public class Tank extends Rectangle implements ActionListener{
     
     public void turnRight()
     {
-        angle = angle + 4;
+        angle = (angle + 4) % 360;
         turret.turnRight();
     }
     
     public void turnLeft()
     {
-        angle = angle - 4;
+        angle = (angle - 4) % 360;
         turret.turnLeft();
     }
     

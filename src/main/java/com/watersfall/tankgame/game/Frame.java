@@ -71,7 +71,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-        System.out.println("timer");
         renderer.repaint();
     }
     
@@ -179,18 +178,32 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
 
         //
-        if(shell1 != null && shell1.checkCollision(tank2) && shell1.checkPenetration(tank2))
+        if(shell1 != null && shell1.checkCollision(tank2))
         {
-            g2d.setColor(Color.pink);
-            g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
-            tank2.destroy();
+            if(shell1.checkPenetration(tank2))
+            {
+                g2d.setColor(Color.pink);
+                g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
+                tank2.destroy();
+            }
+            else
+            {
+                shell1.bounce(tank2.getAngle());
+            }
         }
 
-        if(shell2 != null && shell2.checkCollision(tank1) && shell2.checkPenetration(tank1))
+        if(shell2 != null && shell2.checkCollision(tank1))
         {
-            g2d.setColor(Color.pink);
-            g2d.drawRect((int)tank1.getX(), (int)tank1.getY(), 100, 100);
-            tank1.destroy();
+            if(shell2.checkPenetration(tank1))
+            {
+                g2d.setColor(Color.pink);
+                g2d.drawRect((int)tank1.getX(), (int)tank1.getY(), 100, 100);
+                tank1.destroy();
+            }
+            else
+            {
+                shell2.bounce(tank1.getAngle());
+            }
         }
     }
 

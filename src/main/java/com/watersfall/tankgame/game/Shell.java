@@ -16,7 +16,7 @@ import java.awt.geom.AffineTransform;
 public class Shell extends Rectangle {
     
     private Turret turret;
-    private double angle;
+    public double angle;
     
     public Shell(Turret turret)
     {
@@ -52,14 +52,35 @@ public class Shell extends Rectangle {
     
     public Boolean checkPenetration(Tank tank)
     {
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle()) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height))))
-            return (tank.getTurret().penetration > tank.frontArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle() + 90) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height) * 2 - 180) / 2))
-            return (tank.getTurret().penetration > tank.sideArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle() - 90) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height) * 2 - 180) / 2))
-            return (tank.getTurret().penetration > tank.sideArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle() - 180) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height))))
-            return (tank.getTurret().penetration > tank.rearArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
+        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle()) <= Math.toDegrees(Math.atan2(tank.height, tank.width)))
+        {   
+            System.out.println("FRONT");
+            return (this.turret.penetration > tank.frontArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
+        }
+        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - (tank.getAngle() - 90)) <= Math.abs(Math.toDegrees(Math.atan2(tank.height, tank.width)) * 2 - 180) / 2)
+        {
+            System.out.println("SIDE");
+            return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(this.angle - tank.getAngle())));
+        }
+        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - (tank.getAngle() + 90)) <= Math.abs(Math.toDegrees(Math.atan2(tank.height, tank.width)) * 2 - 180) / 2)
+        {
+            System.out.println("SIDE");
+            return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(this.angle - tank.getAngle())));
+        }
+        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - (tank.getAngle() + 180)) <= Math.toDegrees(Math.atan2(tank.height, tank.width)))
+        {
+            System.out.println("BACK");
+            return (this.turret.penetration > tank.rearArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
+        }
         return false;
+    }
+    
+    public void bounce(double angle)
+    {
+        angle = (angle + 180) % 360;
+        this.angle = (this.angle - angle) + angle;
+        x = x + (int)(Math.cos(Math.toRadians(angle)) * 15);
+        y = y + (int)(Math.sin(Math.toRadians(angle)) * 15);
+        
     }
 }
