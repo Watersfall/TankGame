@@ -6,6 +6,7 @@
 package com.watersfall.tankgame.game;
 
 import com.watersfall.tankgame.Main;
+import data.TankData;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -27,13 +28,18 @@ public class Tank extends Rectangle implements ActionListener{
     private Turret turret;
     private Image image;
     private Timer gameOverTimer;
+    public double frontArmor, sideArmor, rearArmor, penetration;
     
-    public Tank(int x, int y, int height, int width, double angle, BufferedImage image, BufferedImage turretImage) throws IOException
+    public Tank(int x, int y, int height, int width, double angle, BufferedImage image, BufferedImage turretImage, TankData data) throws IOException
     {
         super(x, y, width, height);
+        frontArmor = java.lang.Double.parseDouble(data.tankData[1]);
+        sideArmor = java.lang.Double.parseDouble(data.tankData[2]);
+        rearArmor = java.lang.Double.parseDouble(data.tankData[3]);
+        penetration = java.lang.Double.parseDouble(data.tankData[4]);
         gameOverTimer = new Timer(2500, this);
         this.angle = angle;
-        turret = new Turret(x, y, angle, turretImage);
+        turret = new Turret(x, y, angle, turretImage, penetration);
         this.image = image;
         turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
     }

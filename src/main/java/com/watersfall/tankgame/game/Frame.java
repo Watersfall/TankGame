@@ -5,7 +5,6 @@
  */
 package com.watersfall.tankgame.game;
 
-import com.watersfall.tankgame.Main;
 import data.TankData;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -41,9 +40,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     Image tank1Image, tank2Image; 
     Shell shell1, shell2;
     int player1, player2;
+    ArrayList<TankData> tanks;
     
     public Frame(int player1, int player2, ArrayList<TankData> tanks) throws IOException
     {
+        this.tanks = tanks;
         this.player1 = player1;
         this.player2 = player2;
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -55,8 +56,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         addKeyListener(this);
         
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")));
-        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")), tanks.get(player1));
+        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")), tanks.get(player2));
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -335,8 +336,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         final int screen_Width = dim.width;
         final int screen_Height = dim.height;
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")));
-        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")), tanks.get(player1));
+        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")), tanks.get(player2));
         move1Forward = false;
         move2Forward = false;
         move1Back = false;

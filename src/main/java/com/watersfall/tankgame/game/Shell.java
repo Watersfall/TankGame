@@ -53,13 +53,13 @@ public class Shell extends Rectangle {
     public Boolean checkPenetration(Tank tank)
     {
         if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle()) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height))))
-            return (tank.getTurret().penetration > 75 / Math.abs(Math.cos(this.angle - tank.getAngle())));
+            return (tank.getTurret().penetration > tank.frontArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
         if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle() + 90) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height) * 2 - 180) / 2))
-            return (tank.getTurret().penetration > 75 / Math.abs(Math.cos(this.angle - tank.getAngle())));
+            return (tank.getTurret().penetration > tank.sideArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
         if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle() - 90) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height) * 2 - 180) / 2))
-            return (tank.getTurret().penetration > 75 / Math.abs(Math.cos(this.angle - tank.getAngle())));
+            return (tank.getTurret().penetration > tank.sideArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
         if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle() - 180) > Math.abs(Math.toDegrees(Math.atan(tank.width / tank.height))))
-            return (tank.getTurret().penetration > 75 / Math.abs(Math.cos(this.angle - tank.getAngle())));
+            return (tank.getTurret().penetration > tank.rearArmor / Math.abs(Math.cos(this.angle - tank.getAngle())));
         return false;
     }
 }

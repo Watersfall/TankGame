@@ -25,10 +25,10 @@ public class Turret extends Rectangle implements ActionListener {
     private Timer reloadTimer;
     public double penetration;
     
-    public Turret(int x, int y, double angle, BufferedImage image)
+    public Turret(int x, int y, double angle, BufferedImage image, double penetration)
     {
         super(x, y, image.getWidth(), image.getHeight());
-        penetration = 100;
+        this.penetration = penetration;
         this.angle = angle;
         this.image = image;
         canShoot = true;
