@@ -20,6 +20,10 @@ import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -41,9 +45,18 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     Shell shell1, shell2;
     int player1, player2;
     ArrayList<TankData> tanks;
+    Clip shoot, hit, death, bounce;
     
-    public Frame(int player1, int player2, ArrayList<TankData> tanks) throws IOException
+    public Frame(int player1, int player2, ArrayList<TankData> tanks) throws IOException, LineUnavailableException, UnsupportedAudioFileException
     {
+        shoot = AudioSystem.getClip();
+        bounce = AudioSystem.getClip();
+        death = AudioSystem.getClip();
+        hit = AudioSystem.getClip();
+        shoot.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/Sounds/shoot.wav")));
+        bounce.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/Sounds/bounce.wav")));
+        hit.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/Sounds/death.wav")));
+        death.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/Sounds/hit.wav")));
         this.tanks = tanks;
         this.player1 = player1;
         this.player2 = player2;
@@ -141,17 +154,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.drawImage(tank1.getTurret().getImage(), tank1.getTurret().x, tank1.getTurret().y, renderer);
         g2d.setTransform(old);
 
-        //Tank 1 shell
-        if(shell1 != null)
-        {
-            g2d.setColor(Color.RED);
-            g2d.fillRect(shell1.x, shell1.y, 10, 10);
-            shell1.move();
-            if(shell1.outOfBounds())
-            {
-                shell1 = null;
-            }
-        }
+        
 
         //Tank 2 
         old = g2d.getTransform();
@@ -177,18 +180,33 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             }
         }
 
+        //Tank 1 shell
+        if(shell1 != null)
+        {
+            g2d.setColor(Color.RED);
+            g2d.fillRect(shell1.x, shell1.y, 10, 10);
+            shell1.move();
+            if(shell1.outOfBounds())
+            {
+                shell1 = null;
+            }
+        }
         //
         if(shell1 != null && shell1.checkCollision(tank2))
         {
             if(shell1.checkPenetration(tank2))
             {
+                death.setMicrosecondPosition(0);
+                death.start();
                 g2d.setColor(Color.pink);
                 g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
                 tank2.destroy();
             }
             else
             {
-                shell1.bounce(tank2.getAngle());
+                hit.setMicrosecondPosition(0);
+                hit.start();
+                shell1 = null;
             }
         }
 
@@ -196,13 +214,17 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             if(shell2.checkPenetration(tank1))
             {
+                death.setMicrosecondPosition(0);
+                death.start();
                 g2d.setColor(Color.pink);
                 g2d.drawRect((int)tank1.getX(), (int)tank1.getY(), 100, 100);
                 tank1.destroy();
             }
             else
             {
-                shell2.bounce(tank1.getAngle());
+                hit.setMicrosecondPosition(0);
+                hit.start();
+                shell2 = null;
             }
         }
     }
@@ -245,9 +267,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
         if(e.getKeyCode() == 32)
         {
-            //if(tank1.getTurret().canShoot)
+            if(tank1.getTurret().canShoot)
             {
                 shell1 = new Shell(tank1.getTurret());
+                shoot.setMicrosecondPosition(0);
+                shoot.start();
                 tank1.getTurret().shoot();
             }
         }
@@ -279,7 +303,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             if(tank2.getTurret().canShoot)
             {
+                shoot.setMicrosecondPosition(0);
                 shell2 = new Shell(tank2.getTurret());
+                shoot.start();
                 tank2.getTurret().shoot();
             }
         }

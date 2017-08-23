@@ -15,6 +15,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -98,7 +100,7 @@ public class SelectionFrame extends JFrame {
                 {
                     frame = new Frame(player1Selection, player2Selection, tankArray);
                 } 
-                catch (IOException ex) 
+                catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) 
                 {
                     Logger.getLogger(SelectionFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }

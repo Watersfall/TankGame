@@ -1,4 +1,4 @@
 #Format:
 #,Tank Name, Front Armor, Side Armor, Rear Armor, Gun Penetration, END
 Sherman Firefly, 93.1, 38, 38, 275, END
-Tiger I, 101, 80, 81, 162, END
+Tiger I, 101, 80, 81, 75, END
