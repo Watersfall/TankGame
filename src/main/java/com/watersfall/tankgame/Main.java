@@ -5,7 +5,6 @@
  */
 package com.watersfall.tankgame;
 
-import com.watersfall.tankgame.game.Frame;
 import com.watersfall.tankgame.ui.SelectionFrame;
 import java.io.IOException;
 
@@ -15,11 +14,9 @@ import java.io.IOException;
  */
 public class Main {
     
-    public static Frame frame;
     public static SelectionFrame selectionFrame;
     public static void main(String[] args) throws IOException
     {
-        //frame = new Frame();
         selectionFrame = new SelectionFrame();
     }
 }

@@ -16,17 +16,31 @@ import javax.swing.Timer;
  *
  * @author Christopher
  */
+
+//Class representing the turret on the tank
+//Extends rectangle because turrets are basically rectangles
+//implements ActionListener for the reload timer to work
 public class Turret extends Rectangle implements ActionListener {
     
-    
+    //angle: the angle the turret is facing
+    //image: the image the turret uses
+    //canShoot: true if the turret is reloaded and can shoot, false if not
+    //reloadTimer: The timer for the reloading of the tank
+    //penetration: how much armor the shell from this turret can penetrate
     double angle;
     private BufferedImage image;
     public boolean canShoot;
     private Timer reloadTimer;
     public double penetration;
     
+    //x: the x location for the turret
+    //y: the y location for the turret
+    //angle: the default angle of the turret
+    //image: the image to represent the turret
+    //penetration: how much armor the shell from this turret can penetrate
     public Turret(int x, int y, double angle, BufferedImage image, double penetration)
     {
+        //Calling the super to create the rectangle
         super(x, y, image.getWidth(), image.getHeight());
         this.penetration = penetration;
         this.angle = angle;
@@ -35,16 +49,20 @@ public class Turret extends Rectangle implements ActionListener {
         reloadTimer = new Timer(5000, this);
     }
     
+    //Method to rotate the turret left
     public void turnLeft()
     {
         angle = angle - 4;
     }
     
+    //Method to rotate the turret right
     public void turnRight()
     {
         angle = angle + 4;
     }
     
+    //Method to update the location of the turret
+    //Used for when the tank moves
     public void setLocation(Point p)
     {
         this.x = p.x;
@@ -61,12 +79,16 @@ public class Turret extends Rectangle implements ActionListener {
         return image;
     }
     
+    //Method to shoot the turret
+    //Sets the turret to be unable to shoot and starts the reload timer
     public void shoot()
     {
         reloadTimer.start();
         canShoot = false;
     }
 
+    //Event for when the turret finishes reloading
+    //Sets the turret to be able to shoot and stops the timer
     @Override
     public void actionPerformed(ActionEvent e) {
         canShoot = true;

@@ -14,6 +14,8 @@ public class TankData {
     public String[] tankData;
     private final int dataLength = 5;
     
+    //Object to turn the tank data string into an array of information
+    //Format for this in in the TANKS.txt file
     public TankData(String string)
     {
         tankData = new String[dataLength];

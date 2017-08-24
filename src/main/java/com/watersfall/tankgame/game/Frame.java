@@ -205,9 +205,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             }
             else
             {
-                hit.setMicrosecondPosition(0);
-                hit.start();
-                shell1 = null;
+                bounce.setMicrosecondPosition(0);
+                bounce.start();
+                shell1.bounce(tank2);
             }
         }
 
@@ -223,9 +223,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             }
             else
             {
-                hit.setMicrosecondPosition(0);
-                hit.start();
-                shell2 = null;
+                bounce.setMicrosecondPosition(0);
+                bounce.start();
+                shell2.bounce(tank1);
             }
         }
     }

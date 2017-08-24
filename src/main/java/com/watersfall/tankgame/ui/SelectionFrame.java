@@ -40,12 +40,16 @@ public class SelectionFrame extends JFrame {
     private int player1Selection, player2Selection;
     private ArrayList<TankData> tankArray;
     
+    //SelectionFrame is the starting Frame for the game
+    //This is where players will pick their vehicles, as well as be able to access the menu and settings for the game
     public SelectionFrame() throws IOException
     {
         //Standard JFrame things
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
+        //Creating the panel that everything else will go on
+        //No layout allows manually setting the position and size for all the componenets
         panel = new JPanel();
         panel.setLayout(null);
         
@@ -58,6 +62,11 @@ public class SelectionFrame extends JFrame {
         player2Box = new JComboBox();
         player1.setText("<html><span style='font-size:20px'>Player 1</span></html>");
         player2.setText("<html><span style='font-size:20px'>Player 2</span></html>");
+        
+        //The action listeners that the components use
+        
+        //Action listener to trigger when the player 1 tank selection box has been changed
+        //This causes it to update the tank info box with the data for the selected tank
         player1Box.addActionListener(new ActionListener() 
         {
             @Override
@@ -73,6 +82,8 @@ public class SelectionFrame extends JFrame {
                             +  "</span></html>");
             }
         });
+        
+        //Same as the last one but for the player 2 box
         player2Box.addActionListener(new ActionListener() 
         {
             @Override
@@ -88,6 +99,10 @@ public class SelectionFrame extends JFrame {
                             +  "</span></html>");
             }
         });
+        
+        //Action listener for the start button
+        //It sets the player1Selection and player2Selection variables to the indexes of the their boxes
+        //It also makes the selection form invisible and opens the main frame
         start.addActionListener(new ActionListener() 
         {
             @Override
@@ -107,6 +122,7 @@ public class SelectionFrame extends JFrame {
             }
         });
 
+        //Adding the components to the panel
         panel.add(start);
         panel.add(player1);
         panel.add(player2);
@@ -119,10 +135,13 @@ public class SelectionFrame extends JFrame {
         getContentPane().add(panel);
         pack();
         setVisible(true);
+        
+        //Calling the two local functions in this class to further set up and display
         loadTanks();
         initFrame();
     }
     
+    //Method to set the location and sizes of all the components
     public void initFrame()
     {
         //Player 1 stuff, setting size and location
@@ -147,6 +166,8 @@ public class SelectionFrame extends JFrame {
         start.setLocation(this.getWidth() / 2 - start.getWidth() / 2, this.getHeight() - this.getHeight() / 5);
     }
     
+    //Method to load all the tank data in from the TANKS.txt file in the jar resources
+    //Format for the tank information is in the top of the file
     public void loadTanks() throws IOException
     {
         tankArray = new ArrayList<TankData>();
@@ -154,13 +175,19 @@ public class SelectionFrame extends JFrame {
         String line;
         while((line = reader.readLine()) != null)
         {
+            //Lines starting with # are comments, and should be ignored
             if(!line.startsWith("#"))
             {
+                //Adding the tank data loaded to the array
                 tankArray.add(new TankData(line));
+                
+                //Adding the name of the tank to the two selection boxes, so it shows for tank selection
                 player1Box.addItem(tankArray.get(tankArray.size() - 1).tankData[0]);
                 player2Box.addItem(tankArray.get(tankArray.size() - 1).tankData[0]);
             }
         }
+        
+        //HTML and CSS formatting can be used in text areas
         player1Info.setText("<html><span style='font-size:20px'>" 
                 + tankArray.get(0).tankData[0] + "<br>Front Armor: " 
                 + tankArray.get(0).tankData[1] + " mm<br>Side Armor: " 

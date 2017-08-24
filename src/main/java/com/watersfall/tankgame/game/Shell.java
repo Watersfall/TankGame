@@ -8,6 +8,7 @@ package com.watersfall.tankgame.game;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 
 /**
  *
@@ -17,6 +18,7 @@ public class Shell extends Rectangle {
     
     private Turret turret;
     public double angle;
+    private String HITSIDE;
     
     public Shell(Turret turret)
     {
@@ -27,8 +29,6 @@ public class Shell extends Rectangle {
         y = (int)(turret.getCenterY() + ((turret.getWidth() / 2) * Math.sin(Math.toRadians(angle))));
         width = 10;
         height = 10;
-        
-        
     }
     
     public void move()
@@ -51,33 +51,55 @@ public class Shell extends Rectangle {
     }
     
     public Boolean checkPenetration(Tank tank)
-    {
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - tank.getAngle()) <= Math.toDegrees(Math.atan2(tank.height, tank.width)))
+    {   
+        Line2D front = new Line2D.Double(tank.x + tank.width, tank.y, tank.x + tank.width, tank.y + tank.height);
+        Line2D left = new Line2D.Double(tank.x, tank.y, tank.x + tank.width, tank.y);
+        Line2D right = new Line2D.Double(tank.x, tank.y + tank.height, tank.x + tank.width, tank.y + tank.height);
+        Line2D back = new Line2D.Double(tank.x, tank.y, tank.x, tank.y + tank.height);
+        AffineTransform rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        Shape frontShape = rotate.createTransformedShape(front);
+        rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        Shape leftShape = rotate.createTransformedShape(left);
+        rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        Shape rightShape = rotate.createTransformedShape(right);
+        rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        Shape backShape = rotate.createTransformedShape(back);
+        if(frontShape.intersects(this))
         {   
-            System.out.println("FRONT");
+            HITSIDE = "FRONT";
             return (this.turret.penetration > tank.frontArmor / Math.abs(Math.cos(Math.toRadians(this.angle - tank.getAngle()))));
         }
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - (tank.getAngle() - 90)) <= Math.abs(Math.toDegrees(Math.atan2(tank.height, tank.width)) * 2 - 180) / 2)
+        if(leftShape.intersects(this))
         {
-            System.out.println("SIDE");
+            HITSIDE = "SIDE";
             return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(Math.toRadians(this.angle - tank.getAngle()))));
         }
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - (tank.getAngle() + 90)) <= Math.abs(Math.toDegrees(Math.atan2(tank.height, tank.width)) * 2 - 180) / 2)
+        if(rightShape.intersects(this))
         {
-            System.out.println("SIDE");
+            HITSIDE = "SIDE";
             return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(Math.toRadians(this.angle - tank.getAngle()))));
         }
-        if(Math.abs(Math.toDegrees(Math.atan2(this.y - tank.getCenterY(), this.x - tank.getCenterX())) - (tank.getAngle() + 180)) <= Math.toDegrees(Math.atan2(tank.height, tank.width)))
+        if(backShape.intersects(this))
         {
-            System.out.println("BACK");
+            HITSIDE = "BACK";
             return (this.turret.penetration > tank.rearArmor / Math.abs(Math.cos(Math.toRadians(this.angle - tank.getAngle()))));
         }
         return false;
     }
 
-    public boolean bounce(Tank tank) 
+    public void bounce(Tank tank) 
     {
-        boolean iWannaDie = true;
-        return iWannaDie;
+        if(this.HITSIDE != null && this.HITSIDE.equals("SIDE"))
+        {
+            this.angle = ((tank.angle - 180) * 2) - this.angle;
+        }
+        else
+        {
+            this.angle = ((tank.angle) * 2) - this.angle - 180;
+        }
     }
 }
