@@ -2,4 +2,5 @@
 #,Tank Name, Front Armor, Side Armor, Rear Armor, Gun Penetration, END
 Sherman Firefly, 93.1, 38, 38, 275, END
 Tiger I, 101, 80, 81, 161, END
-M4A3E2 , 154, 76.2, 38, 154, END
+M4A3E2, 154, 76.2, 38, 154, END
+Panther, 140, 40, 46.2, 185, END 
