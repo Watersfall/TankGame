@@ -6,7 +6,7 @@
 package com.watersfall.tankgame.game;
 
 import com.watersfall.tankgame.Main;
-import data.TankData;
+import com.watersfall.tankgame.data.TankData;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;

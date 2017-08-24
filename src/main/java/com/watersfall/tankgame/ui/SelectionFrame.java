@@ -6,7 +6,7 @@
 package com.watersfall.tankgame.ui;
 
 import com.watersfall.tankgame.game.Frame;
-import data.TankData;
+import com.watersfall.tankgame.data.TankData;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;

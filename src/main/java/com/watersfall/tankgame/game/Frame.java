@@ -5,7 +5,7 @@
  */
 package com.watersfall.tankgame.game;
 
-import data.TankData;
+import com.watersfall.tankgame.data.TankData;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
