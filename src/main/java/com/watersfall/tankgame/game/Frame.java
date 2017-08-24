@@ -35,7 +35,7 @@ import javax.swing.Timer;
 public class Frame extends JFrame implements ActionListener, KeyListener {
     
     public static boolean gameOver = false;
-    final int delay = 16; //Closest to 60fps I can get
+    final int DELAY = 16; //Closest to 60fps I can get
     Timer timer; 
     Renderer renderer;
     Tank tank1, tank2;
@@ -69,7 +69,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         add(renderer);
         addKeyListener(this);
         
-        timer = new Timer(16, this);
+        timer = new Timer(DELAY, this);
         tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")), tanks.get(player1));
         tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")), tanks.get(player2));
         
@@ -367,11 +367,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     
     public void reset() throws InterruptedException, IOException
     {
-        /*boolean move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right;
-        boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
-        Graphics2D g2d;
-        Image tank1Image, tank2Image; 
-        Shell shell1, shell2;*/
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         final int screen_Width = dim.width;
         final int screen_Height = dim.height;
