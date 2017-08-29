@@ -31,14 +31,14 @@ public class Turret extends Rectangle implements ActionListener {
     private BufferedImage image;
     public boolean canShoot;
     private Timer reloadTimer;
-    public double penetration;
+    public double penetration, velocity, turretRotation;
     
     //x: the x location for the turret
     //y: the y location for the turret
     //angle: the default angle of the turret
     //image: the image to represent the turret
     //penetration: how much armor the shell from this turret can penetrate
-    public Turret(int x, int y, double angle, BufferedImage image, double penetration)
+    public Turret(int x, int y, double angle, BufferedImage image, double penetration, double velocity, double turretRotation)
     {
         //Calling the super to create the rectangle
         super(x, y, image.getWidth(), image.getHeight());
@@ -47,18 +47,28 @@ public class Turret extends Rectangle implements ActionListener {
         this.image = image;
         canShoot = true;
         reloadTimer = new Timer(5000, this);
+        this.velocity = velocity;
+        this.turretRotation = turretRotation;
     }
     
     //Method to rotate the turret left
     public void turnLeft()
     {
-        angle = angle - 4;
+        angle = angle - turretRotation;
     }
     
     //Method to rotate the turret right
     public void turnRight()
     {
-        angle = angle + 4;
+        angle = angle + turretRotation;
+    }
+    
+    public void turnWithTank(String direction, double turretRotation)
+    {
+        if(direction.equals("LEFT"))
+            angle = angle - turretRotation;
+        else
+            angle = angle + turretRotation;
     }
     
     //Method to update the location of the turret

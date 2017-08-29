@@ -27,14 +27,20 @@ public class Shell extends Rectangle {
         angle = turret.getAngle();
         x = (int)(turret.getCenterX() + ((turret.getWidth() / 2) * Math.cos(Math.toRadians(angle))));
         y = (int)(turret.getCenterY() + ((turret.getWidth() / 2) * Math.sin(Math.toRadians(angle))));
-        width = 10;
-        height = 10;
+        width = 15;
+        height = 7;
     }
     
     public void move()
     {
         x = x + (int)(Math.cos(Math.toRadians(angle)) * 15);
         y = y + (int)(Math.sin(Math.toRadians(angle)) * 15);
+    }
+    
+    private void moveBack()
+    {
+        x = x - (int)(Math.cos(Math.toRadians(angle)) * 15);
+        y = y - (int)(Math.sin(Math.toRadians(angle)) * 15);
     }
     
     public boolean outOfBounds()
@@ -68,21 +74,17 @@ public class Shell extends Rectangle {
         rotate = new AffineTransform();
         rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
         Shape backShape = rotate.createTransformedShape(back);
+        if(rightShape.intersects(this) || leftShape.intersects(this))
+        {
+            HITSIDE = "SIDE";
+            return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(Math.toRadians(this.angle - tank.getAngle()))));
+        }
         if(frontShape.intersects(this))
-        {   
+        {
             HITSIDE = "FRONT";
             return (this.turret.penetration > tank.frontArmor / Math.abs(Math.cos(Math.toRadians(this.angle - tank.getAngle()))));
         }
-        if(leftShape.intersects(this))
-        {
-            HITSIDE = "SIDE";
-            return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(Math.toRadians(this.angle - tank.getAngle()))));
-        }
-        if(rightShape.intersects(this))
-        {
-            HITSIDE = "SIDE";
-            return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(Math.toRadians(this.angle - tank.getAngle()))));
-        }
+        
         if(backShape.intersects(this))
         {
             HITSIDE = "BACK";
@@ -101,5 +103,11 @@ public class Shell extends Rectangle {
         {
             this.angle = ((tank.angle) * 2) - this.angle - 180;
         }
+        this.move();
+    }
+    
+    public double getAngle()
+    {
+        return angle;
     }
 }

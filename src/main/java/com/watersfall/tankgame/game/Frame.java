@@ -172,8 +172,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //Tank 2 shell
         if(shell2 != null)
         {
+            old = g2d.getTransform();
+            g2d.rotate(Math.toRadians(shell2.getAngle()), shell2.getX() + shell2.width / 2, shell2.getY() + shell2.height / 2);
             g2d.setColor(Color.RED);
-            g2d.fillRect(shell2.x, shell2.y, 10, 10);
+            g2d.fillRect(shell2.x, shell2.y, shell2.width, shell2.height);
+            g2d.setTransform(old);
             shell2.move();
             if(shell2.outOfBounds())
             {
@@ -184,14 +187,18 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //Tank 1 shell
         if(shell1 != null)
         {
+            old = g2d.getTransform();
+            g2d.rotate(Math.toRadians(shell1.getAngle()), shell1.getX() + shell1.width / 2, shell1.getY() + shell1.height / 2);
             g2d.setColor(Color.RED);
-            g2d.fillRect(shell1.x, shell1.y, 10, 10);
+            g2d.fillRect(shell1.x, shell1.y, shell1.width, shell1.height);
+            g2d.setTransform(old);
             shell1.move();
             if(shell1.outOfBounds())
             {
                 shell1 = null;
             }
         }
+        
         //
         if(shell1 != null && shell1.checkCollision(tank2))
         {
