@@ -436,8 +436,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         final int screen_Width = dim.width;
         final int screen_Height = dim.height;
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")), tankData.get(player1));
-        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")), tankData.get(player2));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +"TURRET.png")), tankData.get(player1));
+        tank2 = new Tank(SCREENWIDTH - 100 - 256, SCREENHEIGHT - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 +"TURRET.png")), tankData.get(player2));
         move1Forward = false;
         move2Forward = false;
         move1Back = false;
