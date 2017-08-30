@@ -32,9 +32,27 @@ import javax.swing.Timer;
  *
  * @author Christopher
  */
+
+//The main rendering class of the game
+//The Constructor creates the JFrame and adds the objects that will be rendered on the screen
+//The repaint method redraws the game every frame
+//This class also controls the key bindings and resetting the game when one player wins
 public class Frame extends JFrame implements ActionListener, KeyListener {
     
-    public static boolean gameOver = false;
+    //DELAY: how many ms of delay between each frame render
+    //timer: the timer that redraws the game every DELAY ms
+    //renderer: the class that calls the repaint method
+    //tank1, tank2: the two player controlled tanks
+    //move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right: the booleans that are set when the specified keybind is pushed
+    //These control both tanks movement
+    //turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight: the booleans that control the rotation of the turret
+    //g2d: the Graphics2D object that represents the game window
+    //tank1Image, tank2Image: the images that are loaded in for the corresponding tanks
+    //shell1, shell2: the shells shot by the corresponding tanks
+    //player1, player2: the selection index of player 1 and player 2 from the selection form, used to load in their choice of tank
+    //tankData: the array that contains all the TankData objects for each of the tanks read from the tank file
+    //shoot, hit, death, bounce: the sounds that are played
+    //dim: the dimensions of the screen, used to set the JFrame to the correct size
     final int DELAY = 16; //Closest to 60fps I can get
     Timer timer; 
     Renderer renderer;
@@ -45,34 +63,49 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     Image tank1Image, tank2Image; 
     Shell shell1, shell2;
     int player1, player2;
-    ArrayList<TankData> tanks;
+    ArrayList<TankData> tankData;
     Clip shoot, hit, death, bounce;
+    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+    final int SCREENWIDTH = dim.width;
+    final int SCREENHEIGHT = dim.height;
     
-    public Frame(int player1, int player2, ArrayList<TankData> tanks) throws IOException, LineUnavailableException, UnsupportedAudioFileException
+    
+    public Frame(int player1, int player2, ArrayList<TankData> tankData) throws IOException, LineUnavailableException, UnsupportedAudioFileException
     {
+        //This creates each of the sound clips
         shoot = AudioSystem.getClip();
         bounce = AudioSystem.getClip();
         death = AudioSystem.getClip();
         hit = AudioSystem.getClip();
+        
+        //This loads in the sound clips from the JAR resources
+        //They need to be read by a BufferedInputStream so that they can be set back to their start
+        //This enables them to be played multiple times, while only being read in once
         shoot.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/shoot.wav"))));
         bounce.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/bounce.wav"))));
         hit.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/death.wav"))));
         death.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/hit.wav"))));
-        this.tanks = tanks;
+        
+        this.tankData = tankData;
         this.player1 = player1;
         this.player2 = player2;
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        final int screen_Width = dim.width;
-        final int screen_Height = dim.height;
-        setSize(screen_Width , screen_Height);
+        
+        //Setting up the frame in the correct size
+        setSize(SCREENWIDTH, SCREENHEIGHT);
+        
+        //Adding the renderer to the frame, which is what makes everything show up on screen
         renderer = new Renderer();
         add(renderer);
+        
+        //Adding the keylisteners from this class to the frame
         addKeyListener(this);
         
         timer = new Timer(DELAY, this);
-        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")), tanks.get(player1));
-        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")), tanks.get(player2));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +"TURRET.png")), tankData.get(player1));
+        tank2 = new Tank(SCREENWIDTH - 100 - 256, SCREENHEIGHT - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 +"TURRET.png")), tankData.get(player2));
         
+        //Finishing the JFrame
+        //setUndecorated(true) and then pack() causes the game to be run in Borderless Window mode
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
         pack();
@@ -148,6 +181,16 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
         g2d.drawImage(tank1.getImage(), (int)tank1.getX(), (int)tank1.getY(), tank1.width, tank1.height, renderer);
         g2d.setTransform(old);
+        
+        old = g2d.getTransform();
+        for(int i = 0; i < tank1.damage.size(); i++)
+        {
+            old = g2d.getTransform();
+            g2d.rotate(Math.toRadians(tank1.getAngle() - tank1.damage.get(i).angle), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
+            g2d.drawImage(tank1.damage.get(i).getImage(), tank1.damage.get(i).x, tank1.damage.get(i).y, renderer);
+            g2d.setTransform(old);
+        }
+        g2d.setTransform(old);
 
         //Tank 1 Turret
         old = g2d.getTransform();
@@ -155,13 +198,21 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.drawImage(tank1.getTurret().getImage(), tank1.getTurret().x, tank1.getTurret().y, renderer);
         g2d.setTransform(old);
 
-        
-
         //Tank 2 
         old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank2.getAngle()), tank2.getX() + tank2.width / 2, tank2.getY() + tank2.height / 2);
         g2d.drawImage(tank2.getImage(), (int)tank2.getX(), (int)tank2.getY(), tank2.width, tank2.height, renderer);
-        g2d.setTransform(old);     
+        g2d.setTransform(old); 
+        
+        old = g2d.getTransform();
+        for(int i = 0; i < tank2.damage.size(); i++)
+        {
+            old = g2d.getTransform();
+            g2d.rotate(Math.toRadians(tank2.getAngle() - tank2.damage.get(i).angle), tank1.getX() + tank2.width / 2, tank2.getY() + tank2.height / 2);
+            g2d.drawImage(tank2.damage.get(i).getImage(), tank2.damage.get(i).x, tank2.damage.get(i).y, renderer);
+            g2d.setTransform(old);
+        }
+        g2d.setTransform(old);
 
         //Tank 2 Turret
         old = g2d.getTransform();
@@ -199,15 +250,23 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             }
         }
         
-        //
+        old = g2d.getTransform();
+        for(int i = 0; i < tank1.damage.size(); i++)
+        {
+            old = g2d.getTransform();
+            g2d.rotate(Math.toRadians(tank1.getAngle() - tank1.damage.get(i).angle), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
+            g2d.drawImage(tank1.damage.get(i).getImage(), tank1.damage.get(i).x, tank1.damage.get(i).y, renderer);
+            g2d.setTransform(old);
+        }
+        g2d.setTransform(old);
+        
+        //Collision check for tank2
         if(shell1 != null && shell1.checkCollision(tank2))
         {
             if(shell1.checkPenetration(tank2))
             {
                 death.setMicrosecondPosition(0);
                 death.start();
-                g2d.setColor(Color.pink);
-                g2d.drawRect((int)tank2.getX(), (int)tank2.getY(), 100, 100);
                 tank2.destroy();
             }
             else
@@ -218,14 +277,13 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             }
         }
 
+        //Collision check for tank1
         if(shell2 != null && shell2.checkCollision(tank1))
         {
             if(shell2.checkPenetration(tank1))
             {
                 death.setMicrosecondPosition(0);
                 death.start();
-                g2d.setColor(Color.pink);
-                g2d.drawRect((int)tank1.getX(), (int)tank1.getY(), 100, 100);
                 tank1.destroy();
             }
             else
@@ -378,8 +436,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         final int screen_Width = dim.width;
         final int screen_Height = dim.height;
         timer = new Timer(16, this);
-        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")), tanks.get(player1));
-        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")), tanks.get(player2));
+        tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player1 +"TURRET.png")), tankData.get(player1));
+        tank2 = new Tank(screen_Width - 100 - 256, screen_Height - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/TANK" + player2 +"TURRET.png")), tankData.get(player2));
         move1Forward = false;
         move2Forward = false;
         move1Back = false;
