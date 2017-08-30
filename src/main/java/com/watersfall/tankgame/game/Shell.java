@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.io.IOException;
 
 /**
  *
@@ -56,7 +57,7 @@ public class Shell extends Rectangle {
         return shape.intersects(this);
     }
     
-    public Boolean checkPenetration(Tank tank)
+    public Boolean checkPenetration(Tank tank) throws IOException
     {   
         Line2D front = new Line2D.Double(tank.x + tank.width, tank.y, tank.x + tank.width, tank.y + tank.height);
         Line2D left = new Line2D.Double(tank.x, tank.y, tank.x + tank.width, tank.y);
@@ -74,6 +75,7 @@ public class Shell extends Rectangle {
         rotate = new AffineTransform();
         rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
         Shape backShape = rotate.createTransformedShape(back);
+        tank.addDamage((int)(this.getCenterX()), (int)(this.getCenterY()), tank.angle);
         if(rightShape.intersects(this) || leftShape.intersects(this))
         {
             HITSIDE = "SIDE";
@@ -84,7 +86,6 @@ public class Shell extends Rectangle {
             HITSIDE = "FRONT";
             return (this.turret.penetration > tank.frontArmor / Math.abs(Math.cos(Math.toRadians(this.angle - tank.getAngle()))));
         }
-        
         if(backShape.intersects(this))
         {
             HITSIDE = "BACK";

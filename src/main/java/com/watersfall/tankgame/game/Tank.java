@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
@@ -23,14 +24,14 @@ import javax.swing.Timer;
  * @author Christopher
  */
 
-//Class that represents the tanks
-//Extends Rectangle because tanks are rectangles
+//Class that represents the tankData
+//Extends Rectangle because tankData are rectangles
 //Implements ActionListener for the timer to work
 public class Tank extends Rectangle implements ActionListener{
     
     //Variables that are needed that are not in the Rectangle class
     //angle: the angle the tank is at in degrees
-    //turret: this tanks turret
+    //turret: this tankData turret
     //image: the image that the tank uses
     //DELAY: The delay of the timer
     //gameOverTime: the timer that delays the resetting of the game for DELAY milliseconds
@@ -41,6 +42,7 @@ public class Tank extends Rectangle implements ActionListener{
     private final int DELAY = 2500;
     private Timer gameOverTimer;
     public double frontArmor, sideArmor, rearArmor, penetration, velocity, speed, turretRotation, tankRotation, reload;
+    public ArrayList<DamageEffect> damage;
     
     //x: the x location of the tank
     //y: the y location of the tank
@@ -65,6 +67,8 @@ public class Tank extends Rectangle implements ActionListener{
         turretRotation = 4;
         tankRotation = 2;
         reload = 5000;
+        
+        damage = new ArrayList<DamageEffect>();
         
         //Timer to reset the game after a player has won
         gameOverTimer = new Timer(DELAY, this);
@@ -102,23 +106,32 @@ public class Tank extends Rectangle implements ActionListener{
         //Moving the turret with the tank
         turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         
+        for(int i = 0; i < this.damage.size(); i++)
+        {
+            damage.get(i).setLocation(damage.get(i).x + (int)(Math.cos(Math.toRadians(angle)) * this.speed), damage.get(i).y + (int)(Math.sin(Math.toRadians(angle)) * this.speed));
+        }
+        
         //Checking if the tank is out of bounds, and if it is, moving it back in bounds
         //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
         if ((getMaxX() + (width * Math.cos(Math.toRadians(angle))) <= 1))
         {
             x += this.speed;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
         if (getMaxY() + (height * Math.sin(Math.toRadians(angle))) <= 1)
         {
             y += this.speed;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
         if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
         {
             x -= this.speed;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
         if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
         {
             y -= this.speed;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
     }
     
@@ -130,6 +143,11 @@ public class Tank extends Rectangle implements ActionListener{
         x = x - (int)(Math.cos(Math.toRadians(angle)) * (this.speed / 3));
         y = y - (int)(Math.sin(Math.toRadians(angle)) * (this.speed / 3));
         
+        for(int i = 0; i < this.damage.size(); i++)
+        {
+            damage.get(i).setLocation(damage.get(i).x - (int)(Math.cos(Math.toRadians(angle)) * (this.speed / 3)), damage.get(i).y - (int)(Math.sin(Math.toRadians(angle)) * (this.speed / 3)));
+        }
+        
         //Moving the turret with the tank
         turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         
@@ -138,22 +156,26 @@ public class Tank extends Rectangle implements ActionListener{
         if ((getMaxX() + (width * Math.cos(Math.toRadians(angle))) <= 0))
         {
             x += this.speed / 3;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
         if (getMaxY() + (height * Math.sin(Math.toRadians(angle))) <= 0)
         {
             y += this.speed / 3;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
         if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= 1920)
         {
             x -= this.speed / 3;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
         if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= 1080)
         {
             y -= this.speed / 3;
+            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
         }
     }
     
-    //Turns the tanks to the right
+    //Turns the tankData to the right
     //Also turns the turret to the right
     public void turnRight()
     {
@@ -188,7 +210,6 @@ public class Tank extends Rectangle implements ActionListener{
         y = -10000;
         turret.x = -10000;
         turret.y = -10000;
-        Frame.gameOver = true;
         gameOverTimer.start();
     }
     
@@ -212,5 +233,10 @@ public class Tank extends Rectangle implements ActionListener{
         {
             Logger.getLogger(Tank.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void addDamage(int x, int y, double angle) throws IOException
+    {
+        damage.add(new DamageEffect(x + (this.x - x) / 8, y + (this.y - y) / 8, angle));
     }
 }
