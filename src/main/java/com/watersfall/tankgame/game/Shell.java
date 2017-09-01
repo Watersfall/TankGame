@@ -5,7 +5,7 @@
  */
 package com.watersfall.tankgame.game;
 
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -15,8 +15,9 @@ import java.io.IOException;
  *
  * @author Christopher
  */
-public class Shell extends Rectangle {
+public class Shell extends Rectangle2D {
     
+    public double x, y, height, width;
     private Turret turret;
     public double angle;
     private String HITSIDE;
@@ -26,22 +27,24 @@ public class Shell extends Rectangle {
         super();
         this.turret = turret;
         angle = turret.getAngle();
-        x = (int)(turret.getCenterX() + ((turret.getWidth() / 2) * Math.cos(Math.toRadians(angle))));
-        y = (int)(turret.getCenterY() + ((turret.getWidth() / 2) * Math.sin(Math.toRadians(angle))));
-        width = 15;
-        height = 7;
+        this.x = (int)(turret.getCenterX() + ((turret.getWidth() / 2) * Math.cos(Math.toRadians(angle))));
+        this.y = (int)(turret.getCenterY() + ((turret.getWidth() / 2) * Math.sin(Math.toRadians(angle))));
+        this.width = 15;
+        this.height = 7;
+        this.x = (turret.getCenterX() - (this.width / 2) + ((turret.getWidth() / 2) * Math.cos(Math.toRadians(angle))));
+        this.y = (turret.getCenterY() - (this.height / 2) + ((turret.getWidth() / 2) * Math.sin(Math.toRadians(angle))));
     }
     
     public void move()
     {
-        x = x + (int)(Math.cos(Math.toRadians(angle)) * 15);
-        y = y + (int)(Math.sin(Math.toRadians(angle)) * 15);
+        x = x + (Math.cos(Math.toRadians(angle)) * 15);
+        y = y + (Math.sin(Math.toRadians(angle)) * 15);
     }
     
     private void moveBack()
     {
-        x = x - (int)(Math.cos(Math.toRadians(angle)) * 15);
-        y = y - (int)(Math.sin(Math.toRadians(angle)) * 15);
+        x = x - (Math.cos(Math.toRadians(angle)) * 15);
+        y = y - (Math.sin(Math.toRadians(angle)) * 15);
     }
     
     public boolean outOfBounds()
@@ -59,7 +62,10 @@ public class Shell extends Rectangle {
     
     public Boolean checkPenetration(Tank tank) throws IOException
     {   
-        Line2D front = new Line2D.Double(tank.x + tank.width, tank.y, tank.x + tank.width, tank.y + tank.height);
+        //This first one needs to use the get methods for some reason
+        //It didn't work with just the variables
+        //All the others do
+        Line2D front = new Line2D.Double(tank.getX() + tank.getWidth(), tank.getY(), tank.getX() + tank.getWidth(), tank.getY() + tank.getY());
         Line2D left = new Line2D.Double(tank.x, tank.y, tank.x + tank.width, tank.y);
         Line2D right = new Line2D.Double(tank.x, tank.y + tank.height, tank.x + tank.width, tank.y + tank.height);
         Line2D back = new Line2D.Double(tank.x, tank.y, tank.x, tank.y + tank.height);
@@ -110,5 +116,73 @@ public class Shell extends Rectangle {
     public double getAngle()
     {
         return angle;
+    }
+
+    @Override
+    public void setRect(double x, double y, double w, double h) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int outcode(double x, double y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Rectangle2D createIntersection(Rectangle2D r) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Rectangle2D createUnion(Rectangle2D r) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+        public double getX()
+    {
+        return getIntX();
+    }
+    
+    public double getY()
+    {
+        return getIntY();
+    }
+
+    @Override
+    public double getWidth() 
+    {
+        return getIntWidth();
+    }
+
+    @Override
+    public double getHeight() 
+    {
+        return getIntHeight();
+    }
+
+    @Override
+    public boolean isEmpty() 
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public int getIntX()
+    {
+        return (int)Math.round(x);
+    }
+    
+    public int getIntY()
+    {
+        return (int)Math.round(y);
+    }
+    
+    public int getIntWidth()
+    {
+        return (int)Math.round(width);
+    }
+    
+    public int getIntHeight()
+    {
+        return (int)Math.round(height);
     }
 }

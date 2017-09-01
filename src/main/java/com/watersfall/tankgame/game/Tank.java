@@ -9,7 +9,7 @@ import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -27,7 +27,13 @@ import javax.swing.Timer;
 //Class that represents the tankData
 //Extends Rectangle because tankData are rectangles
 //Implements ActionListener for the timer to work
-public class Tank extends Rectangle implements ActionListener{
+public class Tank extends Rectangle2D implements ActionListener{
+    
+    //Information for the rectangle
+    public double x;
+    public double y;
+    public double height;
+    public double width;
     
     //Variables that are needed that are not in the Rectangle class
     //angle: the angle the tank is at in degrees
@@ -55,7 +61,12 @@ public class Tank extends Rectangle implements ActionListener{
     public Tank(int x, int y, int height, int width, double angle, BufferedImage image, BufferedImage turretImage, TankData data) throws IOException
     {
         //Calling the super to create the basic rectangle
-        super(x, y, width, height);
+        super();
+        
+        this.x = x;
+        this.y = y;
+        this.height = height;
+        this.width = width;
         
         //Adding all the info to the tank from data
         frontArmor = java.lang.Double.parseDouble(data.tankData[1]);
@@ -77,17 +88,7 @@ public class Tank extends Rectangle implements ActionListener{
         
         //Creating the tank's turret and centering the turret on the tank
         turret = new Turret(x, y, angle, turretImage, penetration, velocity, turretRotation);
-        turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
-    }
-    
-    public double getX()
-    {
-        return x;
-    }
-    
-    public double getY()
-    {
-        return y;
+        turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
     }
     
     public double getAngle()
@@ -100,15 +101,15 @@ public class Tank extends Rectangle implements ActionListener{
     public void moveForward()
     {
         //Moving the tank in whatever angle it's facing
-        x = x + (int)(Math.cos(Math.toRadians(angle)) * this.speed);
-        y = y + (int)(Math.sin(Math.toRadians(angle)) * this.speed);
+        x = x + (Math.cos(Math.toRadians(angle)) * this.speed);
+        y = y + (Math.sin(Math.toRadians(angle)) * this.speed);
         
         //Moving the turret with the tank
-        turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+        turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         
         for(int i = 0; i < this.damage.size(); i++)
         {
-            damage.get(i).setLocation(damage.get(i).x + (int)(Math.cos(Math.toRadians(angle)) * this.speed), damage.get(i).y + (int)(Math.sin(Math.toRadians(angle)) * this.speed));
+            damage.get(i).setLocation(damage.get(i).x + (Math.cos(Math.toRadians(angle)) * this.speed), damage.get(i).y + (Math.sin(Math.toRadians(angle)) * this.speed));
         }
         
         //Checking if the tank is out of bounds, and if it is, moving it back in bounds
@@ -116,22 +117,22 @@ public class Tank extends Rectangle implements ActionListener{
         if ((getMaxX() + (width * Math.cos(Math.toRadians(angle))) <= 1))
         {
             x += this.speed;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
         if (getMaxY() + (height * Math.sin(Math.toRadians(angle))) <= 1)
         {
             y += this.speed;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
         if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
         {
             x -= this.speed;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
         if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
         {
             y -= this.speed;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
     }
     
@@ -140,8 +141,8 @@ public class Tank extends Rectangle implements ActionListener{
     public void moveBack()
     {
         //Moving the tank backwards in whatever angle it's facing
-        x = x - (int)(Math.cos(Math.toRadians(angle)) * (this.speed / 3));
-        y = y - (int)(Math.sin(Math.toRadians(angle)) * (this.speed / 3));
+        x = x - (Math.cos(Math.toRadians(angle)) * (this.speed / 3));
+        y = y - (Math.sin(Math.toRadians(angle)) * (this.speed / 3));
         
         for(int i = 0; i < this.damage.size(); i++)
         {
@@ -149,29 +150,29 @@ public class Tank extends Rectangle implements ActionListener{
         }
         
         //Moving the turret with the tank
-        turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+        turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         
         //Checking if the tank is out of bounds, and if it is, moving it back in bounds
         //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
         if ((getMaxX() + (width * Math.cos(Math.toRadians(angle))) <= 0))
         {
             x += this.speed / 3;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
         if (getMaxY() + (height * Math.sin(Math.toRadians(angle))) <= 0)
         {
             y += this.speed / 3;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
         if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= 1920)
         {
             x -= this.speed / 3;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
         if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= 1080)
         {
             y -= this.speed / 3;
-            turret.setLocation(new Point(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2)));
+            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
         }
     }
     
@@ -238,5 +239,77 @@ public class Tank extends Rectangle implements ActionListener{
     public void addDamage(int x, int y, double angle) throws IOException
     {
         damage.add(new DamageEffect(x + (this.x - x) / 8, y + (this.y - y) / 8, angle));
+    }
+
+    @Override
+    public void setRect(double x, double y, double w, double h) 
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int outcode(double x, double y) 
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Rectangle2D createIntersection(Rectangle2D r) 
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Rectangle2D createUnion(Rectangle2D r) 
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public double getX()
+    {
+        return getIntX();
+    }
+    
+    public double getY()
+    {
+        return getIntY();
+    }
+
+    @Override
+    public double getWidth() 
+    {
+        return getIntWidth();
+    }
+
+    @Override
+    public double getHeight() 
+    {
+        return getIntHeight();
+    }
+
+    @Override
+    public boolean isEmpty() 
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public int getIntX()
+    {
+        return (int)Math.round(x);
+    }
+    
+    public int getIntY()
+    {
+        return (int)Math.round(y);
+    }
+    
+    public int getIntWidth()
+    {
+        return (int)Math.round(width);
+    }
+    
+    public int getIntHeight()
+    {
+        return (int)Math.round(height);
     }
 }

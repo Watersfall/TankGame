@@ -15,12 +15,12 @@ import javax.imageio.ImageIO;
  */
 public class DamageEffect {
     
-    public int x;
-    public int y;
+    public double x;
+    public double y;
     public double angle;
     private BufferedImage image;
     
-    public DamageEffect(int x, int y, double angle) throws IOException
+    public DamageEffect(double x, double y, double angle) throws IOException
     {
         this.x = x;
         this.y = y;
@@ -28,7 +28,7 @@ public class DamageEffect {
         this.image = ImageIO.read(getClass().getResourceAsStream("/Images/HitEffects/HIT0.png"));
     }
     
-    public void setLocation(int x, int y)
+    public void setLocation(double x, double y)
     {
         this.x = x;
         this.y = y;
@@ -37,5 +37,20 @@ public class DamageEffect {
     public BufferedImage getImage()
     {
         return image;
+    }
+    
+    public int getX()
+    {
+        return (int)Math.round(x);
+    }
+    
+    public int getY()
+    {
+        return (int)Math.round(y);
+    }
+    
+    public int getAngle()
+    {
+        return (int)Math.round(angle);
     }
 }

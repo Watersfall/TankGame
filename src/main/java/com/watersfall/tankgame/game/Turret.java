@@ -6,7 +6,7 @@
 package com.watersfall.tankgame.game;
 
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -20,7 +20,12 @@ import javax.swing.Timer;
 //Class representing the turret on the tank
 //Extends rectangle because turrets are basically rectangles
 //implements ActionListener for the reload timer to work
-public class Turret extends Rectangle implements ActionListener {
+public class Turret extends Rectangle2D implements ActionListener {
+    
+    public double x;
+    public double y;
+    public double height;
+    public double width;
     
     //angle: the angle the turret is facing
     //image: the image the turret uses
@@ -41,7 +46,12 @@ public class Turret extends Rectangle implements ActionListener {
     public Turret(int x, int y, double angle, BufferedImage image, double penetration, double velocity, double turretRotation)
     {
         //Calling the super to create the rectangle
-        super(x, y, image.getWidth(), image.getHeight());
+        super();
+        this.x = x;
+        this.y = y;
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+
         this.penetration = penetration;
         this.angle = angle;
         this.image = image;
@@ -73,10 +83,10 @@ public class Turret extends Rectangle implements ActionListener {
     
     //Method to update the location of the turret
     //Used for when the tank moves
-    public void setLocation(Point p)
+    public void setLocation(double x, double y)
     {
-        this.x = p.x;
-        this.y = p.y;
+        this.x = x;
+        this.y = y;
     }
     
     public double getAngle()
@@ -103,5 +113,73 @@ public class Turret extends Rectangle implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         canShoot = true;
         reloadTimer.stop();
+    }
+
+    @Override
+    public void setRect(double x, double y, double w, double h) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int outcode(double x, double y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Rectangle2D createIntersection(Rectangle2D r) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Rectangle2D createUnion(Rectangle2D r) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+        public double getX()
+    {
+        return getIntX();
+    }
+    
+    public double getY()
+    {
+        return getIntY();
+    }
+
+    @Override
+    public double getWidth() 
+    {
+        return getIntWidth();
+    }
+
+    @Override
+    public double getHeight() 
+    {
+        return getIntHeight();
+    }
+
+    @Override
+    public boolean isEmpty() 
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public int getIntX()
+    {
+        return (int)Math.round(x);
+    }
+    
+    public int getIntY()
+    {
+        return (int)Math.round(y);
+    }
+    
+    public int getIntWidth()
+    {
+        return (int)Math.round(width);
+    }
+    
+    public int getIntHeight()
+    {
+        return (int)Math.round(height);
     }
 }
