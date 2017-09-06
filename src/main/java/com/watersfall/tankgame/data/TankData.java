@@ -12,7 +12,7 @@ package com.watersfall.tankgame.data;
 public class TankData {
     
     public String[] tankData;
-    private final int dataLength = 5;
+    private final int dataLength = 10;
     
     //Object to turn the tank data string into an array of information
     //Format for this in in the TANKS.txt file

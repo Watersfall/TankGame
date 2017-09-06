@@ -5,7 +5,6 @@
  */
 package com.watersfall.tankgame.game;
 
-import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,7 +50,6 @@ public class Turret extends Rectangle2D implements ActionListener {
         this.y = y;
         this.width = image.getWidth();
         this.height = image.getHeight();
-
         this.penetration = penetration;
         this.angle = angle;
         this.image = image;

@@ -8,7 +8,6 @@ package com.watersfall.tankgame.game;
 import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,11 +72,11 @@ public class Tank extends Rectangle2D implements ActionListener{
         sideArmor = java.lang.Double.parseDouble(data.tankData[2]);
         rearArmor = java.lang.Double.parseDouble(data.tankData[3]);
         penetration = java.lang.Double.parseDouble(data.tankData[4]);
-        velocity = 15;
-        speed = 10;
-        turretRotation = 4;
-        tankRotation = 2;
-        reload = 5000;
+        velocity = java.lang.Double.parseDouble(data.tankData[5]) / 50.0;
+        speed = java.lang.Double.parseDouble(data.tankData[6]) / 5.0;
+        turretRotation = java.lang.Double.parseDouble(data.tankData[7]) / 10.0;
+        tankRotation = java.lang.Double.parseDouble(data.tankData[8]);
+        reload = java.lang.Double.parseDouble(data.tankData[9]) * 1000;
         
         damage = new ArrayList<DamageEffect>();
         
@@ -88,7 +87,7 @@ public class Tank extends Rectangle2D implements ActionListener{
         
         //Creating the tank's turret and centering the turret on the tank
         turret = new Turret(x, y, angle, turretImage, penetration, velocity, turretRotation);
-        turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
+        turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
     }
     
     public double getAngle()
@@ -104,36 +103,37 @@ public class Tank extends Rectangle2D implements ActionListener{
         x = x + (Math.cos(Math.toRadians(angle)) * this.speed);
         y = y + (Math.sin(Math.toRadians(angle)) * this.speed);
         
+        //Checking if the tank is out of bounds, and if it is, moving it back in bounds
+        //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
+        if ((getMaxX() <= 0))
+        {
+            x += this.speed;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        if (getMaxY() <= 0)
+        {
+            y += this.speed;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
+        {
+            x -= this.speed;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
+        {
+            y -= this.speed;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        
         //Moving the turret with the tank
-        turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
+        turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
         
         for(int i = 0; i < this.damage.size(); i++)
         {
             damage.get(i).setLocation(damage.get(i).x + (Math.cos(Math.toRadians(angle)) * this.speed), damage.get(i).y + (Math.sin(Math.toRadians(angle)) * this.speed));
         }
         
-        //Checking if the tank is out of bounds, and if it is, moving it back in bounds
-        //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
-        if ((getMaxX() + (width * Math.cos(Math.toRadians(angle))) <= 1))
-        {
-            x += this.speed;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
-        if (getMaxY() + (height * Math.sin(Math.toRadians(angle))) <= 1)
-        {
-            y += this.speed;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
-        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
-        {
-            x -= this.speed;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
-        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
-        {
-            y -= this.speed;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
     }
     
     //Method for moving the tank backward
@@ -144,36 +144,36 @@ public class Tank extends Rectangle2D implements ActionListener{
         x = x - (Math.cos(Math.toRadians(angle)) * (this.speed / 3));
         y = y - (Math.sin(Math.toRadians(angle)) * (this.speed / 3));
         
+        //Checking if the tank is out of bounds, and if it is, moving it back in bounds
+        //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
+        if ((getMaxX() <= 0))
+        {
+            x += this.speed / 3;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        if (getMaxY() <= 0)
+        {
+            y += this.speed / 3;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
+        {
+            x -= this.speed / 3;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
+        {
+            y -= this.speed / 3;
+            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+        }
+        
         for(int i = 0; i < this.damage.size(); i++)
         {
-            damage.get(i).setLocation(damage.get(i).x - (int)(Math.cos(Math.toRadians(angle)) * (this.speed / 3)), damage.get(i).y - (int)(Math.sin(Math.toRadians(angle)) * (this.speed / 3)));
+            damage.get(i).setLocation(damage.get(i).x - (Math.cos(Math.toRadians(angle)) * this.speed / 3), damage.get(i).y - (Math.sin(Math.toRadians(angle)) * this.speed / 3));
         }
         
         //Moving the turret with the tank
-        turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        
-        //Checking if the tank is out of bounds, and if it is, moving it back in bounds
-        //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
-        if ((getMaxX() + (width * Math.cos(Math.toRadians(angle))) <= 0))
-        {
-            x += this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
-        if (getMaxY() + (height * Math.sin(Math.toRadians(angle))) <= 0)
-        {
-            y += this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
-        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= 1920)
-        {
-            x -= this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
-        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= 1080)
-        {
-            y -= this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.width / 2), y + (height / 2) - (turret.height / 2));
-        }
+        turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
     }
     
     //Turns the tankData to the right

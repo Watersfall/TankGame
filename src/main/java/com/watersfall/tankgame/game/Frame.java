@@ -182,7 +182,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.drawImage(tank1.getImage(), (int)tank1.getX(), (int)tank1.getY(), (int)tank1.width, (int)tank1.height, renderer);
         g2d.setTransform(old);
         
-        old = g2d.getTransform();
         for(int i = 0; i < tank1.damage.size(); i++)
         {
             old = g2d.getTransform();
@@ -190,7 +189,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             g2d.drawImage(tank1.damage.get(i).getImage(), (int)tank1.damage.get(i).getX(), (int)tank1.damage.get(i).getY(), renderer);
             g2d.setTransform(old);
         }
-        g2d.setTransform(old);
 
         //Tank 1 Turret
         old = g2d.getTransform();
@@ -204,15 +202,13 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.drawImage(tank2.getImage(), (int)tank2.getX(), (int)tank2.getY(), (int)tank2.width, (int)tank2.height, renderer);
         g2d.setTransform(old); 
         
-        old = g2d.getTransform();
         for(int i = 0; i < tank2.damage.size(); i++)
         {
             old = g2d.getTransform();
-            g2d.rotate(Math.toRadians(tank2.getAngle() - tank2.damage.get(i).angle), tank1.getX() + tank2.width / 2, tank2.getY() + tank2.height / 2);
+            g2d.rotate(Math.toRadians(tank2.getAngle() - tank2.damage.get(i).angle), tank2.getX() + tank2.width / 2, tank2.getY() + tank2.height / 2);
             g2d.drawImage(tank2.damage.get(i).getImage(), (int)tank2.damage.get(i).getX(), (int)tank2.damage.get(i).getY(), renderer);
             g2d.setTransform(old);
         }
-        g2d.setTransform(old);
 
         //Tank 2 Turret
         old = g2d.getTransform();

@@ -19,7 +19,7 @@ public class Shell extends Rectangle2D {
     
     public double x, y, height, width;
     private Turret turret;
-    public double angle;
+    public double angle, velocity;
     private String HITSIDE;
     
     public Shell(Turret turret)
@@ -33,18 +33,13 @@ public class Shell extends Rectangle2D {
         this.height = 7;
         this.x = (turret.getCenterX() - (this.width / 2) + ((turret.getWidth() / 2) * Math.cos(Math.toRadians(angle))));
         this.y = (turret.getCenterY() - (this.height / 2) + ((turret.getWidth() / 2) * Math.sin(Math.toRadians(angle))));
+        this.velocity = turret.velocity;
     }
     
     public void move()
     {
-        x = x + (Math.cos(Math.toRadians(angle)) * 15);
-        y = y + (Math.sin(Math.toRadians(angle)) * 15);
-    }
-    
-    private void moveBack()
-    {
-        x = x - (Math.cos(Math.toRadians(angle)) * 15);
-        y = y - (Math.sin(Math.toRadians(angle)) * 15);
+        x = x + (Math.cos(Math.toRadians(angle)) * this.velocity);
+        y = y + (Math.sin(Math.toRadians(angle)) * this.velocity);
     }
     
     public boolean outOfBounds()
@@ -62,24 +57,21 @@ public class Shell extends Rectangle2D {
     
     public Boolean checkPenetration(Tank tank) throws IOException
     {   
-        //This first one needs to use the get methods for some reason
-        //It didn't work with just the variables
-        //All the others do
-        Line2D front = new Line2D.Double(tank.getX() + tank.getWidth(), tank.getY(), tank.getX() + tank.getWidth(), tank.getY() + tank.getY());
+        Line2D front = new Line2D.Double(tank.x + tank.width, tank.y, tank.x + tank.width, tank.y + tank.height);
         Line2D left = new Line2D.Double(tank.x, tank.y, tank.x + tank.width, tank.y);
         Line2D right = new Line2D.Double(tank.x, tank.y + tank.height, tank.x + tank.width, tank.y + tank.height);
         Line2D back = new Line2D.Double(tank.x, tank.y, tank.x, tank.y + tank.height);
         AffineTransform rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
         Shape frontShape = rotate.createTransformedShape(front);
         rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
         Shape leftShape = rotate.createTransformedShape(left);
         rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
         Shape rightShape = rotate.createTransformedShape(right);
         rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.getX() + tank.width / 2, tank.getY() + tank.height / 2);
+        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
         Shape backShape = rotate.createTransformedShape(back);
         tank.addDamage((int)(this.getCenterX()), (int)(this.getCenterY()), tank.angle);
         if(rightShape.intersects(this) || leftShape.intersects(this))
