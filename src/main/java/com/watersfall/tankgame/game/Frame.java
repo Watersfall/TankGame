@@ -5,6 +5,7 @@
  */
 package com.watersfall.tankgame.game;
 
+import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,8 +18,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
@@ -68,6 +72,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
     final int SCREENWIDTH = dim.width;
     final int SCREENHEIGHT = dim.height;
+    private MapData map;
+    BufferedImage obstacle;
     
     
     public Frame(int player1, int player2, ArrayList<TankData> tankData) throws IOException, LineUnavailableException, UnsupportedAudioFileException
@@ -113,6 +119,14 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         setVisible(true);
         
         timer.start();
+        
+        
+        //Map Test
+        BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/Info/MAPS.txt")));
+        reader.readLine();
+        String string = reader.readLine();
+        map = new MapData(string);
+        obstacle = ImageIO.read(getClass().getResourceAsStream("/Images/MapObjects/WALL.png"));
     }
 
     @Override
@@ -174,6 +188,12 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(turret2RotateRight)
         {
             tank2.getTurret().turnRight();
+        }
+        
+        //Map Obstacles
+        for(int i = 0; i < map.obstacles.length; i++)
+        {
+            g2d.drawImage(obstacle, map.obstacles[i].x, map.obstacles[i].y, map.obstacles[i].width, map.obstacles[i].height, null);
         }
 
         //Tank 1
