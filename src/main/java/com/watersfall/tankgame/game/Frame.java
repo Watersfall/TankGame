@@ -126,7 +126,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         reader.readLine();
         String string = reader.readLine();
         map = new MapData(string);
-        obstacle = ImageIO.read(getClass().getResourceAsStream("/Images/MapObjects/WALL.png"));
     }
 
     @Override
@@ -190,14 +189,20 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             tank2.getTurret().turnRight();
         }
         
+        
+        AffineTransform old = g2d.getTransform();
+        
+        
         //Map Obstacles
         for(int i = 0; i < map.obstacles.length; i++)
         {
-            g2d.drawImage(obstacle, map.obstacles[i].x, map.obstacles[i].y, map.obstacles[i].width, map.obstacles[i].height, null);
+            old = g2d.getTransform();
+            g2d.rotate(Math.toRadians(map.obstacles[i].angle), map.obstacles[i].getCenterX(), map.obstacles[i].getCenterY());
+            g2d.drawImage(map.obstacles[i].image, map.obstacles[i].x, map.obstacles[i].y, map.obstacles[i].width, map.obstacles[i].height, null);
+            g2d.setTransform(old);
         }
 
         //Tank 1
-        AffineTransform old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
         g2d.drawImage(tank1.getImage(), (int)tank1.getX(), (int)tank1.getY(), (int)tank1.width, (int)tank1.height, renderer);
         g2d.setTransform(old);

@@ -7,6 +7,7 @@ package com.watersfall.tankgame.data;
 
 import com.watersfall.tankgame.game.Obstacle;
 import java.awt.Color;
+import java.io.IOException;
 
 /**
  *
@@ -17,7 +18,7 @@ public class MapData {
     public Color background;
     public Obstacle[] obstacles;
     
-    public MapData(String data)
+    public MapData(String data) throws IOException
     {
         System.out.println(data);
         data = data.substring(data.indexOf(":") + 1);
