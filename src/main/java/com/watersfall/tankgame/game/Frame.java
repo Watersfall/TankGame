@@ -124,6 +124,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //Map Test
         BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/Info/MAPS.txt")));
         reader.readLine();
+        reader.readLine();
         String string = reader.readLine();
         map = new MapData(string);
     }
@@ -221,7 +222,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.drawImage(tank1.getTurret().getImage(), (int)tank1.getTurret().getX(), (int)tank1.getTurret().getY(), renderer);
         g2d.setTransform(old);
 
-        //Tank 2 
+        //Tank 2
         old = g2d.getTransform();
         g2d.rotate(Math.toRadians(tank2.getAngle()), tank2.getX() + tank2.width / 2, tank2.getY() + tank2.height / 2);
         g2d.drawImage(tank2.getImage(), (int)tank2.getX(), (int)tank2.getY(), (int)tank2.width, (int)tank2.height, renderer);
@@ -276,7 +277,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             old = g2d.getTransform();
             g2d.rotate(Math.toRadians(tank1.getAngle() - tank1.damage.get(i).getAngle()), tank1.getX() + tank1.getWidth() / 2, tank1.getY() + tank1.getHeight() / 2);
-            g2d.drawImage(tank1.damage.get(i).getImage(), (int)tank1.damage.get(i).getX(), (int)tank1.damage.get(i).getY(), renderer);
+            g2d.drawImage(tank1.damage.get(i).getImage(), tank1.damage.get(i).getX(), tank1.damage.get(i).getY(), renderer);
             g2d.setTransform(old);
         }
         g2d.setTransform(old);

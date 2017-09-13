@@ -188,7 +188,7 @@ public class Tank extends Rectangle2D implements ActionListener{
     //Also turns the turret to the left
     public void turnLeft()
     {
-        angle = (angle - this.tankRotation) % 360;
+        angle = (angle - this.tankRotation + 360) % 360;
         turret.turnWithTank("LEFT", tankRotation);
     }
     

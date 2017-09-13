@@ -27,6 +27,14 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <mainClass>com.watersfall.tankgame.Main.java</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

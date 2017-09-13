@@ -5,10 +5,10 @@
  */
 package com.watersfall.tankgame.game;
 
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.io.IOException;
 
 /**
@@ -21,10 +21,12 @@ public class Shell extends Rectangle2D {
     private Turret turret;
     public double angle, velocity;
     private String HITSIDE;
+    public Rectangle rec;
     
     public Shell(Turret turret)
     {
         super();
+        rec = null;
         this.turret = turret;
         angle = turret.getAngle();
         this.x = (int)(turret.getCenterX() + ((turret.getWidth() / 2) * Math.cos(Math.toRadians(angle))));
@@ -40,6 +42,12 @@ public class Shell extends Rectangle2D {
     {
         x = x + (Math.cos(Math.toRadians(angle)) * this.velocity);
         y = y + (Math.sin(Math.toRadians(angle)) * this.velocity);
+    }
+
+    public void moveBack()
+    {
+        x = x - (Math.cos(Math.toRadians(angle)));
+        y = y - (Math.sin(Math.toRadians(angle)));
     }
     
     public boolean outOfBounds()
@@ -57,39 +65,35 @@ public class Shell extends Rectangle2D {
     
     public Boolean checkPenetration(Tank tank) throws IOException
     {   
-        Line2D front = new Line2D.Double(tank.x + tank.width, tank.y, tank.x + tank.width, tank.y + tank.height);
-        Line2D left = new Line2D.Double(tank.x, tank.y, tank.x + tank.width, tank.y);
-        Line2D right = new Line2D.Double(tank.x, tank.y + tank.height, tank.x + tank.width, tank.y + tank.height);
-        Line2D back = new Line2D.Double(tank.x, tank.y, tank.x, tank.y + tank.height);
-        AffineTransform rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
-        Shape frontShape = rotate.createTransformedShape(front);
-        rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
-        Shape leftShape = rotate.createTransformedShape(left);
-        rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
-        Shape rightShape = rotate.createTransformedShape(right);
-        rotate = new AffineTransform();
-        rotate.rotate(Math.toRadians(tank.getAngle()), tank.x + tank.width / 2, tank.y + tank.height / 2);
-        Shape backShape = rotate.createTransformedShape(back);
-        tank.addDamage((int)(this.getCenterX()), (int)(this.getCenterY()), tank.angle);
-        if(rightShape.intersects(this) || leftShape.intersects(this))
-        {
-            HITSIDE = "SIDE";
-            return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(Math.toRadians(this.angle - tank.getAngle()))));
-        }
-        if(frontShape.intersects(this))
+        //Instead of dealing with the shell and tank being at angles
+        //It is much easier to rotate them back to 0 degrees
+        //tempX and tempY are variables that hold the X and Y of this shell rotated back to 0 degrees with reference to the tank
+        //Since the tank is always at 0 degrees, it does not need to be rotated
+        double tempX = Math.cos(Math.toRadians(tank.angle)) 
+        * (this.getCenterX() - tank.getCenterX()) - Math.sin(Math.toRadians(tank.angle)) 
+        * (this.getCenterY() - tank.getCenterY()) + tank.getCenterX();
+        double tempY = Math.sin(Math.toRadians(tank.angle)) 
+        * (this.getCenterX() - tank.getCenterX()) - Math.cos(Math.toRadians(tank.angle)) 
+        * (this.getCenterY() - tank.getCenterY()) + tank.getCenterY();
+
+        if(tempX > tank.getCenterX() && tempY > tank.y && tempY < tank.y + tank.height)
         {
             HITSIDE = "FRONT";
             return (this.turret.penetration > tank.frontArmor / Math.abs(Math.cos(Math.toRadians(this.angle - tank.getAngle()))));
         }
-        if(backShape.intersects(this))
+        else
         {
-            HITSIDE = "BACK";
-            return (this.turret.penetration > tank.rearArmor / Math.abs(Math.cos(Math.toRadians(this.angle - tank.getAngle()))));
+            if(tempX < tank.getCenterX() && tempY > tank.y && tempY < tank.y + tank.height)
+            {
+                HITSIDE = "BACK";
+                return (this.turret.penetration > tank.rearArmor / Math.abs(Math.cos(Math.toRadians(this.angle - tank.getAngle()))));
+            }
+            else
+            {
+                HITSIDE = "SIDE";
+                return (this.turret.penetration > tank.sideArmor / Math.abs(Math.sin(Math.toRadians(this.angle - tank.getAngle()))));
+            }
         }
-        return false;
     }
 
     public void bounce(Tank tank) 
