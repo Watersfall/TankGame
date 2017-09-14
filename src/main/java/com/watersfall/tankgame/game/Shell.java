@@ -76,6 +76,9 @@ public class Shell extends Rectangle2D {
         * (this.getCenterX() - tank.getCenterX()) - Math.cos(Math.toRadians(tank.angle)) 
         * (this.getCenterY() - tank.getCenterY()) + tank.getCenterY();
 
+        //Checking which side the shell is hitting the tank at
+        //This sets the HITSIDE to whatever side it hits so it can correctly calculate the bounce angle
+        //It also checks if the shell penetrates or bounces, based off the penetration of this shell and the armor of the tank
         if(tempX > tank.getCenterX() && tempY > tank.y && tempY < tank.y + tank.height)
         {
             HITSIDE = "FRONT";

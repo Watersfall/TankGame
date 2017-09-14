@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -43,6 +44,15 @@ import javax.swing.Timer;
 //This class also controls the key bindings and resetting the game when one player wins
 public class Frame extends JFrame implements ActionListener, KeyListener {
     
+    //Setting up the screen bounds
+    public static Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+    public static final int SCREENWIDTH = dim.width;
+    public static final int SCREENHEIGHT = dim.height;
+    public static final Rectangle2D TOP = new Rectangle2D.Float(0, 0, SCREENWIDTH, 1);
+    public static final Rectangle2D LEFT = new Rectangle2D.Float(0, 0, 1, SCREENHEIGHT);
+    public static final Rectangle2D RIGHT = new Rectangle2D.Float(SCREENWIDTH, 0, 1, SCREENHEIGHT);
+    public static final Rectangle2D BOTTOM = new Rectangle2D.Float(0, SCREENHEIGHT, SCREENWIDTH, 1);
+
     //DELAY: how many ms of delay between each frame render
     //timer: the timer that redraws the game every DELAY ms
     //renderer: the class that calls the repaint method
@@ -56,7 +66,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     //player1, player2: the selection index of player 1 and player 2 from the selection form, used to load in their choice of tank
     //tankData: the array that contains all the TankData objects for each of the tanks read from the tank file
     //shoot, hit, death, bounce: the sounds that are played
-    //dim: the dimensions of the screen, used to set the JFrame to the correct size
     final int DELAY = 16; //Closest to 60fps I can get
     Timer timer; 
     Renderer renderer;
@@ -69,9 +78,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     int player1, player2;
     ArrayList<TankData> tankData;
     Clip shoot, hit, death, bounce;
-    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    final int SCREENWIDTH = dim.width;
-    final int SCREENHEIGHT = dim.height;
+    
     private MapData map;
     BufferedImage obstacle;
     
@@ -127,6 +134,13 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         reader.readLine();
         String string = reader.readLine();
         map = new MapData(string);
+
+        initFrame();
+    }
+
+    private void initFrame()
+    {
+
     }
 
     @Override

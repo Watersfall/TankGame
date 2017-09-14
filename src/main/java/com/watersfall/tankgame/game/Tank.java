@@ -8,6 +8,8 @@ package com.watersfall.tankgame.game;
 import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.Image;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -105,27 +107,50 @@ public class Tank extends Rectangle2D implements ActionListener{
         
         //Checking if the tank is out of bounds, and if it is, moving it back in bounds
         //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
-        if ((getMaxX() <= 0))
+        /*if ((getMinX() <= 0))
         {
             x += this.speed;
             turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
         }
-        if (getMaxY() <= 0)
+        if (getMinY() <= 0)
         {
             y += this.speed;
             turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
         }
-        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
+        if (getMaxX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
         {
             x -= this.speed;
             turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
         }
-        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
+        if(getMaxY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
         {
             y -= this.speed;
             turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
         }
-        
+        */
+
+        AffineTransform rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(this.angle), this.getCenterX(), this.getCenterY());
+        Shape shape = rotate.createTransformedShape(this);
+
+        if(shape.intersects(Frame.TOP))
+        {
+            y = y - (Math.sin(Math.toRadians(angle)) * this.speed);
+        }
+        if(shape.intersects(Frame.LEFT))
+        {
+            x = x - (Math.cos(Math.toRadians(angle)) * this.speed);
+        }
+        if(shape.intersects(Frame.RIGHT))
+        {
+            x = x - (Math.cos(Math.toRadians(angle)) * this.speed);
+        }
+        if(shape.intersects(Frame.BOTTOM))
+        {
+            y = y - (Math.sin(Math.toRadians(angle)) * this.speed);
+        }
+
+
         //Moving the turret with the tank
         turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
         
@@ -146,25 +171,25 @@ public class Tank extends Rectangle2D implements ActionListener{
         
         //Checking if the tank is out of bounds, and if it is, moving it back in bounds
         //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
-        if ((getMaxX() <= 0))
+        AffineTransform rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(this.angle), this.getCenterX(), this.getCenterY());
+        Shape shape = rotate.createTransformedShape(this);
+
+        if(shape.intersects(Frame.TOP))
         {
-            x += this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+            y = y + (Math.sin(Math.toRadians(angle)) * (this.speed / 3));
         }
-        if (getMaxY() <= 0)
+        if(shape.intersects(Frame.LEFT))
         {
-            y += this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+            x = x + (Math.cos(Math.toRadians(angle)) * (this.speed / 3));
         }
-        if (getMinX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
+        if(shape.intersects(Frame.RIGHT))
         {
-            x -= this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+            x = x + (Math.cos(Math.toRadians(angle)) * (this.speed / 3));
         }
-        if(getMinY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
+        if(shape.intersects(Frame.BOTTOM))
         {
-            y -= this.speed / 3;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
+            y = y + (Math.sin(Math.toRadians(angle)) * (this.speed / 3));
         }
         
         for(int i = 0; i < this.damage.size(); i++)
@@ -182,6 +207,33 @@ public class Tank extends Rectangle2D implements ActionListener{
     {
         angle = (angle + this.tankRotation) % 360;
         turret.turnWithTank("RIGHT", tankRotation);
+
+        AffineTransform rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(this.angle), this.getCenterX(), this.getCenterY());
+        Shape shape = rotate.createTransformedShape(this);
+        if(shape.intersects(Frame.TOP))
+        {
+            x = x + (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y + (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+        if(shape.intersects(Frame.LEFT))
+        {
+            x = x + (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y + (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+        if(shape.intersects(Frame.RIGHT))
+        {
+            x = x - (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y - (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+        if(shape.intersects(Frame.BOTTOM))
+        {
+            x = x - (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y - (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+        
+        //Moving the turret with the tank
+        turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
     }
     
     //Turns the tank to the left
@@ -190,6 +242,33 @@ public class Tank extends Rectangle2D implements ActionListener{
     {
         angle = (angle - this.tankRotation + 360) % 360;
         turret.turnWithTank("LEFT", tankRotation);
+
+        AffineTransform rotate = new AffineTransform();
+        rotate.rotate(Math.toRadians(this.angle), this.getCenterX(), this.getCenterY());
+        Shape shape = rotate.createTransformedShape(this);
+        if(shape.intersects(Frame.TOP))
+        {
+            x = x + (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y + (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+        if(shape.intersects(Frame.LEFT))
+        {
+            x = x + (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y + (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+        if(shape.intersects(Frame.RIGHT))
+        {
+            x = x - (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y - (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+        if(shape.intersects(Frame.BOTTOM))
+        {
+            x = x - (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
+            y = y - (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+
+        //Moving the turret with the tank
+        turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
     }
     
     public Turret getTurret()
@@ -212,12 +291,6 @@ public class Tank extends Rectangle2D implements ActionListener{
         turret.x = -10000;
         turret.y = -10000;
         gameOverTimer.start();
-    }
-    
-    //Method to check if the tank is out of bounds
-    public boolean outOfBounds()
-    {
-        return (this.getMinY() < 0 || this.getMinX() < 0 || this.getMaxX() > 1920 || this.getMaxY() > 1080);
     }
 
     //Action listener for the timer
