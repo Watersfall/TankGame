@@ -46,8 +46,8 @@ public class Shell extends Rectangle2D {
 
     public void moveBack()
     {
-        x = x - (Math.cos(Math.toRadians(angle)));
-        y = y - (Math.sin(Math.toRadians(angle)));
+        x = x - (Math.cos(Math.toRadians(angle)) * this.velocity);
+        y = y - (Math.sin(Math.toRadians(angle)) * this.velocity);
     }
     
     public boolean outOfBounds()
