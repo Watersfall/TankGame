@@ -7,6 +7,7 @@ package com.watersfall.tankgame.game;
 
 import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
+import com.watersfall.tankgame.ui.HealthBar;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -53,6 +54,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public static final Rectangle2D RIGHT = new Rectangle2D.Float(SCREENWIDTH, 0, 1, SCREENHEIGHT);
     public static final Rectangle2D BOTTOM = new Rectangle2D.Float(0, SCREENHEIGHT, SCREENWIDTH, 1);
 
+    //UI Elements that are on the screen
+
     //DELAY: how many ms of delay between each frame render
     //timer: the timer that redraws the game every DELAY ms
     //renderer: the class that calls the repaint method
@@ -67,19 +70,20 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     //tankData: the array that contains all the TankData objects for each of the tanks read from the tank file
     //shoot, hit, death, bounce: the sounds that are played
     final int DELAY = 16; //Closest to 60fps I can get
-    Timer timer; 
-    Renderer renderer;
-    Tank tank1, tank2;
-    boolean move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right;
-    boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
-    Graphics2D g2d;
-    Image tank1Image, tank2Image; 
-    Shell shell1, shell2;
-    int player1, player2;
-    ArrayList<TankData> tankData;
-    Clip shoot, hit, death, bounce;
+    public Timer timer; 
+    public Renderer renderer;
+    public Tank tank1, tank2;
+    public boolean move1Forward, move2Forward, move1Back, move2Back, turn1Left, turn2Left, turn1Right, turn2Right;
+    public boolean turret1RotateLeft, turret1RotateRight, turret2RotateLeft, turret2RotateRight;
+    public Graphics2D g2d;
+    public Image tank1Image, tank2Image; 
+    public Shell shell1, shell2;
+    public int player1, player2;
+    public ArrayList<TankData> tankData;
+    public Clip shoot, hit, death, bounce;
+    public HealthBar player1Health, player2Health;
     
-    private MapData map;
+    public MapData map;
     BufferedImage obstacle;
     
     
@@ -117,6 +121,10 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +"TURRET.png")), tankData.get(player1));
         tank2 = new Tank(SCREENWIDTH - 100 - 256, SCREENHEIGHT - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 +"TURRET.png")), tankData.get(player2));
         
+        //Health bars
+        player1Health = new HealthBar(tank1.health, 300, 50);
+        player2Health = new HealthBar(tank2.health, 1220, 50);
+
         //Finishing the JFrame
         //setUndecorated(true) and then pack() causes the game to be run in Borderless Window mode
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -134,13 +142,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         reader.readLine();
         String string = reader.readLine();
         map = new MapData(string);
-
-        initFrame();
-    }
-
-    private void initFrame()
-    {
-
     }
 
     @Override
@@ -302,6 +303,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             if(shell1.checkPenetration(tank2))
             { 
                 tank2.health = tank2.health - tank1.getTurret().shellDamage;
+                player2Health.setProgress(tank2.health);
                 shell1 = null;
                 if(tank2.health <= 0)
                 {
@@ -329,6 +331,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             if(shell2.checkPenetration(tank1))
             {
                 tank1.health = tank1.health - tank2.getTurret().shellDamage;
+                player1Health.setProgress(tank1.health);
                 shell2 = null;
                 if(tank1.health <= 0)
                 {
@@ -349,6 +352,12 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 shell2.bounce(tank1);
             }
         }
+        g2d.setColor(player1Health.backgroundColor);
+        g2d.fillRect(player1Health.background.x, player1Health.background.y, player1Health.background.width, player1Health.background.height);
+        g2d.fillRect(player2Health.background.x, player2Health.background.y, player2Health.background.width, player2Health.background.height);
+        g2d.setColor(player1Health.foregroundColor);
+        g2d.fillRect(player2Health.foreground.x, player2Health.foreground.y, player2Health.foreground.width, player2Health.foreground.height);
+        g2d.fillRect(player1Health.foreground.x, player1Health.foreground.y, player1Health.foreground.width, player1Health.foreground.height);
     }
 
     @Override
@@ -488,9 +497,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     
     public void reset() throws InterruptedException, IOException
     {
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        final int screen_Width = dim.width;
-        final int screen_Height = dim.height;
         timer = new Timer(16, this);
         tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +"TURRET.png")), tankData.get(player1));
         tank2 = new Tank(SCREENWIDTH - 100 - 256, SCREENHEIGHT - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 +"TURRET.png")), tankData.get(player2));
@@ -504,5 +510,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         turn2Right = false;
         shell1 = null;
         shell2 = null;
+        player1Health.setProgress(tank1.health);
+        player2Health.setProgress(tank2.health);
     }
 }
