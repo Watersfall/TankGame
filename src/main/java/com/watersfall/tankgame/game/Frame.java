@@ -96,8 +96,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //This enables them to be played multiple times, while only being read in once
         shoot.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/shoot.wav"))));
         bounce.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/bounce.wav"))));
-        hit.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/death.wav"))));
-        death.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/hit.wav"))));
+        hit.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/hit.wav"))));
+        death.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/death.wav"))));
         
         this.tankData = tankData;
         this.player1 = player1;
@@ -300,10 +300,20 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(shell1 != null && shell1.checkCollision(tank2))
         {
             if(shell1.checkPenetration(tank2))
-            {
-                death.setMicrosecondPosition(0);
-                death.start();
-                tank2.destroy();
+            { 
+                tank2.health = tank2.health - tank1.getTurret().shellDamage;
+                shell1 = null;
+                if(tank2.health <= 0)
+                {
+                    death.setMicrosecondPosition(0);
+                    death.start();
+                    tank2.destroy();
+                }
+                else
+                {
+                    hit.setMicrosecondPosition(0);
+                    hit.start();
+                }
             }
             else
             {
@@ -318,9 +328,19 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         {
             if(shell2.checkPenetration(tank1))
             {
-                death.setMicrosecondPosition(0);
-                death.start();
-                tank1.destroy();
+                tank1.health = tank1.health - tank2.getTurret().shellDamage;
+                shell2 = null;
+                if(tank1.health <= 0)
+                {
+                    death.setMicrosecondPosition(0);
+                    death.start();
+                    tank1.destroy();
+                }
+                else
+                {
+                    hit.setMicrosecondPosition(0);
+                    hit.start();
+                }
             }
             else
             {

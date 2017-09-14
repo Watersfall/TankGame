@@ -48,7 +48,7 @@ public class Tank extends Rectangle2D implements ActionListener{
     private Image image;
     private final int DELAY = 2500;
     private Timer gameOverTimer;
-    public double frontArmor, sideArmor, rearArmor, penetration, velocity, speed, turretRotation, tankRotation, reload;
+    public double frontArmor, sideArmor, rearArmor, penetration, velocity, speed, turretRotation, tankRotation, reload, health, shellDamage;
     public ArrayList<DamageEffect> damage;
     
     //x: the x location of the tank
@@ -79,6 +79,8 @@ public class Tank extends Rectangle2D implements ActionListener{
         turretRotation = java.lang.Double.parseDouble(data.tankData[7]) / 10.0;
         tankRotation = java.lang.Double.parseDouble(data.tankData[8]);
         reload = java.lang.Double.parseDouble(data.tankData[9]) * 1000;
+        health = java.lang.Double.parseDouble(data.tankData[10]);
+        shellDamage = java.lang.Double.parseDouble(data.tankData[11]);
         
         damage = new ArrayList<DamageEffect>();
         
@@ -88,7 +90,7 @@ public class Tank extends Rectangle2D implements ActionListener{
         this.image = image;
         
         //Creating the tank's turret and centering the turret on the tank
-        turret = new Turret(x, y, angle, turretImage, penetration, velocity, turretRotation);
+        turret = new Turret(x, y, angle, turretImage, penetration, velocity, turretRotation, shellDamage);
         turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
     }
     

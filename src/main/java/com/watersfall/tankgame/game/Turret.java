@@ -35,14 +35,14 @@ public class Turret extends Rectangle2D implements ActionListener {
     private BufferedImage image;
     public boolean canShoot;
     private Timer reloadTimer;
-    public double penetration, velocity, turretRotation;
+    public double penetration, velocity, turretRotation, shellDamage;
     
     //x: the x location for the turret
     //y: the y location for the turret
     //angle: the default angle of the turret
     //image: the image to represent the turret
     //penetration: how much armor the shell from this turret can penetrate
-    public Turret(int x, int y, double angle, BufferedImage image, double penetration, double velocity, double turretRotation)
+    public Turret(int x, int y, double angle, BufferedImage image, double penetration, double velocity, double turretRotation, double shellDamage)
     {
         //Calling the super to create the rectangle
         super();
@@ -57,6 +57,7 @@ public class Turret extends Rectangle2D implements ActionListener {
         reloadTimer = new Timer(5000, this);
         this.velocity = velocity;
         this.turretRotation = turretRotation;
+        this.shellDamage = shellDamage;
     }
     
     //Method to rotate the turret left

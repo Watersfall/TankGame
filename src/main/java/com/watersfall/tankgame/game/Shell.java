@@ -69,6 +69,7 @@ public class Shell extends Rectangle2D {
         //It is much easier to rotate them back to 0 degrees
         //tempX and tempY are variables that hold the X and Y of this shell rotated back to 0 degrees with reference to the tank
         //Since the tank is always at 0 degrees, it does not need to be rotated
+        this.moveBack();
         double tempX = Math.cos(Math.toRadians(tank.angle)) 
         * (this.getCenterX() - tank.getCenterX()) - Math.sin(Math.toRadians(tank.angle)) 
         * (this.getCenterY() - tank.getCenterY()) + tank.getCenterX();
