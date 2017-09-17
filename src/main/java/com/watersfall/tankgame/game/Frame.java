@@ -158,19 +158,19 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         if(move1Forward)
         {
-            tank1.moveForward();
+            tank1.moveForward(tank2);
         }
         if(move1Back)
         {
-            tank1.moveBack();
+            tank1.moveBack(tank2);
         }
         if(turn1Left)
         {
-            tank1.turnLeft();
+            tank1.turnLeft(tank2);
         }
         if(turn1Right)
         {
-            tank1.turnRight();
+            tank1.turnRight(tank2);
         }
         if(turret1RotateLeft)
         {
@@ -182,19 +182,19 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
         if(move2Forward)
         {
-            tank2.moveForward();
+            tank2.moveForward(tank1);
         }
         if(move2Back)
         {
-            tank2.moveBack();
+            tank2.moveBack(tank1);
         }
         if(turn2Left)
         {
-            tank2.turnLeft();
+            tank2.turnLeft(tank1);
         }
         if(turn2Right)
         {
-            tank2.turnRight();
+            tank2.turnRight(tank1);
         }
         if(turret2RotateLeft)
         {
@@ -367,10 +367,16 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 if (shell1 != null && map.obstacles[i].checkShellCollision(shell1))
                 {
                     map.obstacles[i] = null;
+                    hit.setMicrosecondPosition(0);
+                    hit.start();
+                    shell1 = null;
                 }
                 if (shell2 != null && map.obstacles[i].checkShellCollision(shell2))
                 {
                     map.obstacles[i] = null;
+                    hit.setMicrosecondPosition(0);
+                    hit.start();
+                    shell2 = null;
                 }
             }
         }
