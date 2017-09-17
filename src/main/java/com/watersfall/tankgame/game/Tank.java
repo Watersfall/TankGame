@@ -8,8 +8,10 @@ package com.watersfall.tankgame.game;
 import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -104,32 +106,10 @@ public class Tank extends Rectangle2D implements ActionListener{
     public void moveForward()
     {
         //Moving the tank in whatever angle it's facing
+        double oldX = x;
+        double oldY = y;
         x = x + (Math.cos(Math.toRadians(angle)) * this.speed);
         y = y + (Math.sin(Math.toRadians(angle)) * this.speed);
-        
-        //Checking if the tank is out of bounds, and if it is, moving it back in bounds
-        //THIS NEEDS TO BE FIXED, BUT IS FINE FOR NOW
-        /*if ((getMinX() <= 0))
-        {
-            x += this.speed;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
-        }
-        if (getMinY() <= 0)
-        {
-            y += this.speed;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
-        }
-        if (getMaxX() + (width * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getWidth())
-        {
-            x -= this.speed;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
-        }
-        if(getMaxY() + (height * Math.cos(Math.toRadians(angle))) >= Main.selectionFrame.frame.getHeight())
-        {
-            y -= this.speed;
-            turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
-        }
-        */
 
         AffineTransform rotate = new AffineTransform();
         rotate.rotate(Math.toRadians(this.angle), this.getCenterX(), this.getCenterY());
@@ -152,6 +132,60 @@ public class Tank extends Rectangle2D implements ActionListener{
             y = y - (Math.sin(Math.toRadians(angle)) * this.speed);
         }
 
+        for(int i = 0; i < Main.selectionFrame.frame.map.obstacles.length; i++)
+        {
+            int o = 0;
+            String collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            while(Main.selectionFrame.frame.map.obstacles[i] != null && collide != null)
+            {
+                if(collide.equals("TOP"))
+                {
+                    y = y - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    x = x - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("LEFT") && this.angle < 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("RIGHT") && this.angle < 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("LEFT") && this.angle > 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("RIGHT") && this.angle > 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("BOTTOM"))
+                {
+                    y = y - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    x = x - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(this.angle - Main.selectionFrame.frame.map.obstacles[i].angle % 360 == 180 
+                || this.angle - Main.selectionFrame.frame.map.obstacles[i].angle % 360 == 0 
+                || this.angle - Main.selectionFrame.frame.map.obstacles[i].angle % 360 == 360)
+                {
+                    x = oldX;
+                    y = oldY;
+                }
+                o++;
+                if(o > 8)
+                {
+                    o = 0;
+                    x = oldX;
+                    y = oldY;
+                    break;
+                }
+                collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            }
+        }
 
         //Moving the turret with the tank
         turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
@@ -168,6 +202,8 @@ public class Tank extends Rectangle2D implements ActionListener{
     public void moveBack()
     {
         //Moving the tank backwards in whatever angle it's facing
+        double oldX = x;
+        double oldY = y;
         x = x - (Math.cos(Math.toRadians(angle)) * (this.speed / 3));
         y = y - (Math.sin(Math.toRadians(angle)) * (this.speed / 3));
         
@@ -194,6 +230,61 @@ public class Tank extends Rectangle2D implements ActionListener{
             y = y + (Math.sin(Math.toRadians(angle)) * (this.speed / 3));
         }
         
+        for(int i = 0; i < Main.selectionFrame.frame.map.obstacles.length; i++)
+        {
+            int o = 0;
+            String collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            while(Main.selectionFrame.frame.map.obstacles[i] != null && collide != null)
+            {
+                if(collide.equals("TOP"))
+                {
+                    y = y + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                    x = x + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                }
+                if(collide.equals("LEFT") && this.angle < 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                }
+                if(collide.equals("RIGHT") && this.angle < 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                }
+                if(collide.equals("LEFT") && this.angle > 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                }
+                if(collide.equals("RIGHT") && this.angle > 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                }
+                if(collide.equals("BOTTOM"))
+                {
+                    y = y + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                    x = x + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * (this.speed / 3));
+                }
+                if(this.angle - Main.selectionFrame.frame.map.obstacles[i].angle % 360 == 180 
+                || this.angle - Main.selectionFrame.frame.map.obstacles[i].angle % 360 == 0 
+                || this.angle - Main.selectionFrame.frame.map.obstacles[i].angle % 360 == 360)
+                {
+                    x = oldX;
+                    y = oldY;
+                }
+                o++;
+                if(o > 8)
+                {
+                    o = 0;
+                    x = oldX;
+                    y = oldY;
+                    break;
+                }
+                collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            }
+        }
+
         for(int i = 0; i < this.damage.size(); i++)
         {
             damage.get(i).setLocation(damage.get(i).x - (Math.cos(Math.toRadians(angle)) * this.speed / 3), damage.get(i).y - (Math.sin(Math.toRadians(angle)) * this.speed / 3));
@@ -233,6 +324,52 @@ public class Tank extends Rectangle2D implements ActionListener{
             x = x - (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
             y = y - (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
         }
+
+        for(int i = 0; i < Main.selectionFrame.frame.map.obstacles.length; i++)
+        {
+            int o = 0;
+            String collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            while(Main.selectionFrame.frame.map.obstacles[i] != null && collide != null)
+            {
+                if(collide.equals("TOP"))
+                {
+                    y = y - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    x = x - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("LEFT") && this.angle < 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("RIGHT") && this.angle < 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("LEFT") && this.angle > 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("RIGHT") && this.angle > 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("BOTTOM"))
+                {
+                    y = y - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    x = x - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                o++;
+                if(o > 8)
+                {
+                    o = 0;
+                    break;
+                }
+                collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            }
+        }
         
         //Moving the turret with the tank
         turret.setLocation(x + (width / 2) - (turret.getWidth() / 2), y + (height / 2) - (turret.getHeight() / 2));
@@ -267,6 +404,52 @@ public class Tank extends Rectangle2D implements ActionListener{
         {
             x = x - (Math.cos(Math.toRadians(angle)) * this.speed) * Math.cos(Math.toRadians(this.angle));
             y = y - (Math.sin(Math.toRadians(angle)) * this.speed) * Math.sin(Math.toRadians(this.angle));
+        }
+
+        for(int i = 0; i < Main.selectionFrame.frame.map.obstacles.length; i++)
+        {
+            int o = 0;
+            String collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            while(Main.selectionFrame.frame.map.obstacles[i] != null && collide != null)
+            {
+                if(collide.equals("TOP"))
+                {
+                    y = y - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    x = x - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("LEFT") && this.angle < 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("RIGHT") && this.angle < 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("LEFT") && this.angle > 180)
+                {
+                    x = x + (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y + (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("RIGHT") && this.angle > 180)
+                {
+                    x = x - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    y = y - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                if(collide.equals("BOTTOM"))
+                {
+                    y = y - (Math.sin(Math.toRadians(angle - Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                    x = x - (Math.sin(Math.toRadians(Main.selectionFrame.frame.map.obstacles[i].angle)) * this.speed);
+                }
+                o++;
+                if(o > 8)
+                {
+                    o = 0;
+                    break;
+                }
+                collide = Main.selectionFrame.frame.map.obstacles[i].checkTankCollision(this);
+            }
         }
 
         //Moving the turret with the tank
@@ -325,7 +508,22 @@ public class Tank extends Rectangle2D implements ActionListener{
     @Override
     public int outcode(double x, double y) 
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        int out = 0;
+        if (this.width <= 0) {
+            out |= OUT_LEFT | OUT_RIGHT;
+        } else if (x < this.x) {
+            out |= OUT_LEFT;
+        } else if (x > this.x + (double) this.width) {
+            out |= OUT_RIGHT;
+        }
+        if (this.height <= 0) {
+            out |= OUT_TOP | OUT_BOTTOM;
+        } else if (y < this.y) {
+            out |= OUT_TOP;
+        } else if (y > this.y + (double) this.height) {
+            out |= OUT_BOTTOM;
+        }
+        return out;
     }
 
     @Override

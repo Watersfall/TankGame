@@ -97,7 +97,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         
         //This loads in the sound clips from the JAR resources
         //They need to be read by a BufferedInputStream so that they can be set back to their start
-        //This enables them to be played multiple times, while only being read in once
+        //This enables them to be played multiple times
         shoot.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/shoot.wav"))));
         bounce.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/bounce.wav"))));
         hit.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/hit.wav"))));
@@ -207,16 +207,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         
         
         AffineTransform old = g2d.getTransform();
-        
-        
-        //Map Obstacles
-        for(int i = 0; i < map.obstacles.length; i++)
-        {
-            old = g2d.getTransform();
-            g2d.rotate(Math.toRadians(map.obstacles[i].angle), map.obstacles[i].getCenterX(), map.obstacles[i].getCenterY());
-            g2d.drawImage(map.obstacles[i].image, map.obstacles[i].x, map.obstacles[i].y, map.obstacles[i].width, map.obstacles[i].height, null);
-            g2d.setTransform(old);
-        }
 
         //Tank 1
         g2d.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
@@ -300,6 +290,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //Collision check for tank2
         if(shell1 != null && shell1.checkCollision(tank2))
         {
+            shell1.move();
+            tank2.addDamage((int)shell1.getCenterX(), (int)shell1.getCenterY(), tank2.angle);
+            shell1.moveBack();
             if(shell1.checkPenetration(tank2))
             { 
                 tank2.health = tank2.health - tank1.getTurret().shellDamage;
@@ -328,6 +321,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //Collision check for tank1
         if(shell2 != null && shell2.checkCollision(tank1))
         {
+            shell2.move();
+            tank1.addDamage((int)shell2.getCenterX(), (int)shell2.getCenterY(), tank1.angle);
+            shell2.moveBack();
             if(shell2.checkPenetration(tank1))
             {
                 tank1.health = tank1.health - tank2.getTurret().shellDamage;
@@ -352,6 +348,33 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 shell2.bounce(tank1);
             }
         }
+
+        //Map Obstacles
+        for(int i = 0; i < map.obstacles.length; i++)
+        {
+            if(map.obstacles[i] != null)
+            {
+                old = g2d.getTransform();
+                g2d.rotate(Math.toRadians(map.obstacles[i].angle), map.obstacles[i].getCenterX(), map.obstacles[i].getCenterY());
+                g2d.drawImage(map.obstacles[i].image, map.obstacles[i].x, map.obstacles[i].y, map.obstacles[i].width, map.obstacles[i].height, null);
+                g2d.setTransform(old);
+                g2d.setColor(Color.RED);
+                g2d.drawLine((int)map.obstacles[i].TOP.getX1(), (int)map.obstacles[i].TOP.getY1(), (int)map.obstacles[i].TOP.getX2(), (int)map.obstacles[i].TOP.getY2());
+                g2d.drawLine((int)map.obstacles[i].LEFT.getX1(), (int)map.obstacles[i].LEFT.getY1(), (int)map.obstacles[i].LEFT.getX2(), (int)map.obstacles[i].LEFT.getY2());
+                g2d.drawLine((int)map.obstacles[i].RIGHT.getX1(), (int)map.obstacles[i].RIGHT.getY1(), (int)map.obstacles[i].RIGHT.getX2(), (int)map.obstacles[i].RIGHT.getY2());
+                g2d.drawLine((int)map.obstacles[i].BOTTOM.getX1(), (int)map.obstacles[i].BOTTOM.getY1(), (int)map.obstacles[i].BOTTOM.getX2(), (int)map.obstacles[i].BOTTOM.getY2());
+                
+                if (shell1 != null && map.obstacles[i].checkShellCollision(shell1))
+                {
+                    map.obstacles[i] = null;
+                }
+                if (shell2 != null && map.obstacles[i].checkShellCollision(shell2))
+                {
+                    map.obstacles[i] = null;
+                }
+            }
+        }
+
         g2d.setColor(player1Health.backgroundColor);
         g2d.fillRect(player1Health.background.x, player1Health.background.y, player1Health.background.width, player1Health.background.height);
         g2d.fillRect(player2Health.background.x, player2Health.background.y, player2Health.background.width, player2Health.background.height);
