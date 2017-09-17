@@ -6,6 +6,7 @@
 package com.watersfall.tankgame.ui;
 
 import com.watersfall.tankgame.game.Frame;
+import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,15 +31,16 @@ import javax.swing.JPanel;
 public class SelectionFrame extends JFrame {
     
     //The things that will be added to the frame
-    private JComboBox player1Box, player2Box;
+    private JComboBox player1Box, player2Box, mapBox;
     private JLabel player1, player2, player1Info, player2Info;
     private JPanel panel;
     private JButton start;
     public Frame frame;
     
     //The things that will be passed into the main game
-    private int player1Selection, player2Selection;
+    private int player1Selection, player2Selection, mapSelection;
     private ArrayList<TankData> tankArray;
+    private ArrayList<MapData> mapArray;
     
     //SelectionFrame is the starting Frame for the game
     //This is where players will pick their vehicles, as well as be able to access the menu and settings for the game
@@ -60,6 +62,7 @@ public class SelectionFrame extends JFrame {
         player2 = new JLabel();
         player1Box = new JComboBox();
         player2Box = new JComboBox();
+        mapBox = new JComboBox();
         player1.setText("<html><span style='font-size:20px'>Player 1</span></html>");
         player2.setText("<html><span style='font-size:20px'>Player 2</span></html>");
         
@@ -110,10 +113,11 @@ public class SelectionFrame extends JFrame {
             {
                 player1Selection = player1Box.getSelectedIndex();
                 player2Selection = player2Box.getSelectedIndex();
+                mapSelection = mapBox.getSelectedIndex();
                 setVisible(false);
                 try 
                 {
-                    frame = new Frame(player1Selection, player2Selection, tankArray);
+                    frame = new Frame(player1Selection, player2Selection, tankArray, mapSelection, mapArray);
                 } 
                 catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) 
                 {
@@ -130,6 +134,7 @@ public class SelectionFrame extends JFrame {
         panel.add(player2Box);
         panel.add(player1Info);
         panel.add(player2Info);
+        panel.add(mapBox);
         
         //Finishing and displaying the JFrame
         getContentPane().add(panel);
@@ -138,6 +143,7 @@ public class SelectionFrame extends JFrame {
         
         //Calling the two local functions in this class to further set up and display
         loadTanks();
+        loadMaps();
         initFrame();
     }
     
@@ -164,6 +170,10 @@ public class SelectionFrame extends JFrame {
         //Start button stuff, setting size and location
         start.setSize(150, 75);
         start.setLocation(this.getWidth() / 2 - start.getWidth() / 2, this.getHeight() - this.getHeight() / 5);
+
+        //Setting the map boxes size and location
+        mapBox.setSize(200, 25);
+        mapBox.setLocation(this.getWidth() / 2 - 100, this.getHeight() - this.getHeight() / 4);
     }
     
     //Method to load all the tank data in from the TANKS.txt file in the jar resources
@@ -202,5 +212,25 @@ public class SelectionFrame extends JFrame {
                 + tankArray.get(0).tankData[3] + "mm<br> Gun Penetration: " 
                 + tankArray.get(0).tankData[4] + "mm<br>" 
                         +  "</span></html>");
+    }
+
+    public void loadMaps() throws IOException
+    {
+        mapArray = new ArrayList<MapData>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/Info/MAPS.txt")));
+        String line;
+        while((line = reader.readLine()) != null)
+        {
+            //Lines starting with # are comments, and should be ignored
+            if(!line.startsWith("#"))
+            {
+                //Adding the tank data loaded to the array
+                mapArray.add(new MapData(line));
+                System.out.println("adding map");
+                
+                //Adding the name of the tank to the two selection boxes, so it shows for tank selection
+                mapBox.addItem(mapArray.get(mapArray.size() - 1).name);
+            }
+        }
     }
 }

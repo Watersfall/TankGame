@@ -17,10 +17,11 @@ public class MapData {
     
     public Color background;
     public Obstacle[] obstacles;
+    public String name;
     
     public MapData(String data) throws IOException
     {
-        System.out.println(data);
+        name = data.substring(0, data.indexOf(":"));
         data = data.substring(data.indexOf(":") + 1);
         int itemCount = Integer.parseInt(data.substring(0, data.indexOf(":")).trim());
         data = data.substring(data.indexOf(":") + 1);

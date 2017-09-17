@@ -87,7 +87,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     BufferedImage obstacle;
     
     
-    public Frame(int player1, int player2, ArrayList<TankData> tankData) throws IOException, LineUnavailableException, UnsupportedAudioFileException
+    public Frame(int player1, int player2, ArrayList<TankData> tankData, int mapSelection, ArrayList<MapData> map) throws IOException, LineUnavailableException, UnsupportedAudioFileException
     {
         //This creates each of the sound clips
         shoot = AudioSystem.getClip();
@@ -135,13 +135,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         
         timer.start();
         
-        
-        //Map Test
-        BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/Info/MAPS.txt")));
-        reader.readLine();
-        reader.readLine();
-        String string = reader.readLine();
-        map = new MapData(string);
+        this.map = map.get(mapSelection);
     }
 
     @Override
