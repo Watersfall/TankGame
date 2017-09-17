@@ -28,7 +28,7 @@ public class Obstacle extends Rectangle {
     public BufferedImage image;
     public int collisionX, collisionY, collisionWidth, collisionHeight;
     public Line2D TOP, BOTTOM, LEFT, RIGHT; 
-    public Rectangle collisionRectangle;
+    public Rectangle2D collisionRectangle;
     
     public Obstacle(String data) throws IOException
     {
@@ -55,6 +55,7 @@ public class Obstacle extends Rectangle {
             collisionY = y + height / 4;
         }
 
+        collisionRectangle = new Rectangle2D.Double(collisionX, collisionY, collisionWidth, collisionHeight);
         Point2D TL = new Point2D.Double(collisionX, collisionY);
         Point2D TR = new Point2D.Double(collisionX + collisionWidth, collisionY);
         Point2D BL = new Point2D.Double(collisionX, collisionY + collisionHeight);
