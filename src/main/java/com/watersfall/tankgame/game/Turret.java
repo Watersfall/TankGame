@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
+import com.watersfall.tankgame.Main;
+
 /**
  *
  * @author Christopher
@@ -46,6 +48,7 @@ public class Turret extends Rectangle2D implements ActionListener {
     {
         //Calling the super to create the rectangle
         super();
+        image = Main.resize(image, (int)(image.getWidth() * Frame.SCALE_X), (int)(image.getHeight() * Frame.SCALE_Y));
         this.x = x;
         this.y = y;
         this.width = image.getWidth();

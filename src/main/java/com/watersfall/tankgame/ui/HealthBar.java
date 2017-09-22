@@ -1,5 +1,6 @@
 package com.watersfall.tankgame.ui;
 
+import com.watersfall.tankgame.game.Frame;
 import java.awt.Color;
 import java.awt.Rectangle;
 
@@ -8,20 +9,21 @@ public class HealthBar
 
     public Rectangle background, foreground;
     public Color backgroundColor, foregroundColor;
-    public int x, y, width, height;
+    public double x, y;
+    public int width, height;
     public double maxValue;
 
-    public HealthBar(double maxValue, int x, int y)
+    public HealthBar(double maxValue, double x, double y)
     {
         this.x = x;
         this.y = y;
-        this.width = 400;
-        this.height = 40;
+        this.width = (int)(400 * Frame.SCALE_X);
+        this.height = (int)(40 * Frame.SCALE_Y);
         this.maxValue = maxValue;
         this.backgroundColor = new Color(0, 0, 0);
         this.foregroundColor = new Color(255, 0, 0);
-        this.background = new Rectangle(x, y, width, height);
-        this.foreground = new Rectangle(x, y, width, height);
+        this.background = new Rectangle((int)x, (int)y, width, height);
+        this.foreground = new Rectangle((int)x, (int)y, width, height);
     }
 
     public void setProgress(double newValue)

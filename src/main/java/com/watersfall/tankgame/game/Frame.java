@@ -22,9 +22,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
@@ -53,8 +51,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public static final Rectangle2D LEFT = new Rectangle2D.Float(0, 0, 1, SCREENHEIGHT);
     public static final Rectangle2D RIGHT = new Rectangle2D.Float(SCREENWIDTH, 0, 1, SCREENHEIGHT);
     public static final Rectangle2D BOTTOM = new Rectangle2D.Float(0, SCREENHEIGHT, SCREENWIDTH, 1);
-
-    //UI Elements that are on the screen
+    public static final double SCALE_X = SCREENWIDTH / 1920.0;
+    public static final double SCALE_Y = SCREENHEIGHT / 1080.0;
 
     //DELAY: how many ms of delay between each frame render
     //timer: the timer that redraws the game every DELAY ms
@@ -82,6 +80,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public ArrayList<TankData> tankData;
     public Clip shoot, hit, death, bounce;
     public HealthBar player1Health, player2Health;
+    public int player1Wins, player2Wins;
     
     public MapData map;
     BufferedImage obstacle;
@@ -89,6 +88,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     
     public Frame(int player1, int player2, ArrayList<TankData> tankData, int mapSelection, ArrayList<MapData> map) throws IOException, LineUnavailableException, UnsupportedAudioFileException
     {
+        System.out.println(SCREENWIDTH + "\n" + SCREENHEIGHT);
         //This creates each of the sound clips
         shoot = AudioSystem.getClip();
         bounce = AudioSystem.getClip();
@@ -119,11 +119,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         
         timer = new Timer(DELAY, this);
         tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +"TURRET.png")), tankData.get(player1));
-        tank2 = new Tank(SCREENWIDTH - 100 - 256, SCREENHEIGHT - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 +"TURRET.png")), tankData.get(player2));
+        tank2 = new Tank((int)((SCREENWIDTH - 100 - 256)), (int)((SCREENHEIGHT - 100 - 128)), 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 +"TURRET.png")), tankData.get(player2));
         
         //Health bars
-        player1Health = new HealthBar(tank1.health, 300, 50);
-        player2Health = new HealthBar(tank2.health, 1220, 50);
+        player1Health = new HealthBar(tank1.health, 300 * this.SCALE_X, 50 * this.SCALE_Y);
+        player2Health = new HealthBar(tank2.health, 1220 * this.SCALE_X, 50 * this.SCALE_Y);
 
         //Finishing the JFrame
         //setUndecorated(true) and then pack() causes the game to be run in Borderless Window mode
@@ -136,6 +136,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         timer.start();
         
         this.map = map.get(mapSelection);
+
+        player1Wins = 0;
+        player2Wins = 0;
     }
 
     @Override
@@ -148,7 +151,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     {
         g2d = (Graphics2D)g;
         g2d.setColor(Color.GREEN.darker());
-        g2d.fillRect(0, 0, 1920, 1080);
+        g2d.fillRect(0, 0, this.SCREENWIDTH, this.SCREENHEIGHT);
 
         if(move1Forward)
         {
@@ -203,7 +206,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         AffineTransform old = g2d.getTransform();
 
         //Tank 1
-        g2d.rotate(Math.toRadians(tank1.getAngle()), tank1.getX() + tank1.width / 2, tank1.getY() + tank1.height / 2);
+        g2d.rotate(Math.toRadians(tank1.getAngle()), tank1.getCenterX(), tank1.getCenterY());
         g2d.drawImage(tank1.getImage(), (int)tank1.getX(), (int)tank1.getY(), (int)tank1.width, (int)tank1.height, renderer);
         g2d.setTransform(old);
         

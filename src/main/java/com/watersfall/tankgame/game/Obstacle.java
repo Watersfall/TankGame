@@ -32,13 +32,13 @@ public class Obstacle extends Rectangle {
     
     public Obstacle(String data) throws IOException
     {
-        width = Integer.parseInt(data.substring(0, data.indexOf(",")).trim());
+        width = (int)(Integer.parseInt(data.substring(0, data.indexOf(",")).trim()) * Frame.SCALE_X);
         data = data.substring(data.indexOf(",") + 1);
-        height = Integer.parseInt(data.substring(0, data.indexOf(",")).trim());
+        height = (int)(Integer.parseInt(data.substring(0, data.indexOf(",")).trim()) * Frame.SCALE_Y);
         data = data.substring(data.indexOf(",") + 1);
-        x = Integer.parseInt(data.substring(0, data.indexOf(",")).trim());
+        x = (int)(Integer.parseInt(data.substring(0, data.indexOf(",")).trim()) * Frame.SCALE_X);
         data = data.substring(data.indexOf(",") + 1);
-        y = Integer.parseInt(data.substring(0, data.indexOf(",")).trim());
+        y = (int)(Integer.parseInt(data.substring(0, data.indexOf(",")).trim()) * Frame.SCALE_Y);
         data = data.substring(data.indexOf(",") + 1);
         angle = Integer.parseInt(data.substring(0, data.indexOf(",")).trim());
         data = data.substring(data.indexOf(",") + 1);

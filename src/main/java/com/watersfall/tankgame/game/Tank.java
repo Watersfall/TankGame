@@ -68,8 +68,8 @@ public class Tank extends Rectangle2D implements ActionListener{
         
         this.x = x;
         this.y = y;
-        this.height = height;
-        this.width = width;
+        this.height = height * Frame.SCALE_Y;
+        this.width = width * Frame.SCALE_X;
         
         //Adding all the info to the tank from data
         frontArmor = java.lang.Double.parseDouble(data.tankData[1]);
