@@ -1,1 +1,2 @@
-java -jar target/TankGame-0.1-jar-with-dependencies.jar
+java -jar target/Totally-Tubular-Tanks.jar
+pause
