@@ -11,6 +11,7 @@ import com.watersfall.tankgame.data.TankData;
 import com.watersfall.tankgame.ui.HealthBar;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -54,6 +55,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public static final Rectangle2D BOTTOM = new Rectangle2D.Float(0, SCREENHEIGHT, SCREENWIDTH, 1);
     public static final double SCALE_X = SCREENWIDTH / 1920.0;
     public static final double SCALE_Y = SCREENHEIGHT / 1080.0;
+    public static final int FONTSIZE = (int)(56 * SCALE_X);
 
     //DELAY: how many ms of delay between each frame render
     //timer: the timer that redraws the game every DELAY ms
@@ -204,6 +206,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             tank2.getTurret().turnRight();
         }
         
+
         
         AffineTransform old = g2d.getTransform();
 
@@ -302,6 +305,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                     death.setMicrosecondPosition(0);
                     death.start();
                     tank2.destroy();
+                    player1Wins++;
                 }
                 else
                 {
@@ -333,6 +337,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                     death.setMicrosecondPosition(0);
                     death.start();
                     tank1.destroy();
+                    player2Wins++;
                 }
                 else
                 {
@@ -386,6 +391,10 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         g2d.setColor(player1Health.foregroundColor);
         g2d.fillRect(player2Health.foreground.x, player2Health.foreground.y, player2Health.foreground.width, player2Health.foreground.height);
         g2d.fillRect(player1Health.foreground.x, player1Health.foreground.y, player1Health.foreground.width, player1Health.foreground.height);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, FONTSIZE)); 
+        g2d.setColor(Color.BLACK);
+        g2d.drawString(Integer.toString(player1Wins), (int)player1Health.x + (int)player1Health.width + (int)(25 * SCALE_X), (int)player1Health.y + (int)player1Health.height);
+        g2d.drawString(Integer.toString(player2Wins), (int)player2Health.x - (int)(25 * SCALE_X) - (int)(SCALE_X * (Integer.toString(player2Wins).length() * FONTSIZE / 3)), (int)player2Health.y + (int)player2Health.height);
     }
 
     @Override
