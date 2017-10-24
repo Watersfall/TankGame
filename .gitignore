@@ -47,6 +47,3 @@ Temporary Items
 .apdisk
 *.class
 /target
-*.midi
-src/main/resources/Sounds/Music/BattleSong2.mid
-*.mid
