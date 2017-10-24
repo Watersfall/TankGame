@@ -5,6 +5,7 @@
  */
 package com.watersfall.tankgame.game;
 
+import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
 import com.watersfall.tankgame.ui.HealthBar;
@@ -139,6 +140,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         player1Wins = 0;
         player2Wins = 0;
+        Main.selectionFrame.setVisible(false);
     }
 
     @Override

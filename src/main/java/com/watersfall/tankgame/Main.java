@@ -10,6 +10,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
 
 /**
  *
@@ -29,7 +31,7 @@ public class Main {
     }  
 
     public static SelectionFrame selectionFrame;
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws IOException, MidiUnavailableException, InvalidMidiDataException
     {
         selectionFrame = new SelectionFrame();
     }

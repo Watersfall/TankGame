@@ -10,12 +10,18 @@ import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
@@ -41,11 +47,28 @@ public class SelectionFrame extends JFrame {
     private int player1Selection, player2Selection, mapSelection;
     private ArrayList<TankData> tankArray;
     private ArrayList<MapData> mapArray;
+
+    //Things to play the background music
+    private Sequencer music;
+    private Sequencer battleMusic;
+    private InputStream musicInput;
+    private InputStream battleMusicInput;
+
     
     //SelectionFrame is the starting Frame for the game
     //This is where players will pick their vehicles, as well as be able to access the menu and settings for the game
-    public SelectionFrame() throws IOException
+    public SelectionFrame() throws IOException, MidiUnavailableException, InvalidMidiDataException
     {
+        music = MidiSystem.getSequencer();
+        battleMusic = MidiSystem.getSequencer();
+        music.open();
+        battleMusic.open();
+        musicInput = new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Music/Anthem.midi"));
+        battleMusicInput = new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Music/BattleSong" + ((int)(Math.random() * 3) + 1) + ".mid"));
+        music.setSequence(musicInput);
+        battleMusic.setSequence(battleMusicInput);
+        music.start();
+
         //Standard JFrame things
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -114,10 +137,11 @@ public class SelectionFrame extends JFrame {
                 player1Selection = player1Box.getSelectedIndex();
                 player2Selection = player2Box.getSelectedIndex();
                 mapSelection = mapBox.getSelectedIndex();
-                setVisible(false);
                 try 
                 {
                     frame = new Frame(player1Selection, player2Selection, tankArray, mapSelection, mapArray);
+                    music.stop();
+                    battleMusic.start();
                 } 
                 catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) 
                 {
@@ -138,8 +162,11 @@ public class SelectionFrame extends JFrame {
         
         //Finishing and displaying the JFrame
         getContentPane().add(panel);
+        setUndecorated(true);
         pack();
         setVisible(true);
+        toFront();
+        requestFocus();
         
         //Calling the two local functions in this class to further set up and display
         loadTanks();
