@@ -3,11 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.watersfall.tankgame.game;
+package com.watersfall.tankgame.ui;
 
 import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
+import com.watersfall.tankgame.game.Particles;
+import com.watersfall.tankgame.game.Renderer;
+import com.watersfall.tankgame.game.Shell;
+import com.watersfall.tankgame.game.Tank;
 import com.watersfall.tankgame.ui.HealthBar;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +19,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,14 +30,20 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.Timer;
+
 
 /**
  *
@@ -84,12 +95,15 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public Clip shoot, hit, death, bounce;
     public HealthBar player1Health, player2Health;
     public int player1Wins, player2Wins;
+    private Sequencer battleMusic;
+    private InputStream battleMusicInput;
     
     public MapData map;
     BufferedImage obstacle;
     
+    public ArrayList<Particles> particles;
     
-    public Frame(int player1, int player2, ArrayList<TankData> tankData, int mapSelection, ArrayList<MapData> map) throws IOException, LineUnavailableException, UnsupportedAudioFileException
+    public Frame(int player1, int player2, ArrayList<TankData> tankData, int mapSelection, ArrayList<MapData> map) throws IOException, LineUnavailableException, UnsupportedAudioFileException, MidiUnavailableException, InvalidMidiDataException
     {
         System.out.println(SCREENWIDTH + "\n" + SCREENHEIGHT);
         //This creates each of the sound clips
@@ -97,14 +111,21 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         bounce = AudioSystem.getClip();
         death = AudioSystem.getClip();
         hit = AudioSystem.getClip();
+
+        //Music
+        battleMusic = MidiSystem.getSequencer();
+        battleMusic.open();
+        battleMusicInput = new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Music/BattleSong" + ((int)(Math.random() * 3) + 1) + ".mid"));
+        battleMusic.setSequence(battleMusicInput);
+        battleMusic.start();
         
         //This loads in the sound clips from the JAR resources
         //They need to be read by a BufferedInputStream so that they can be set back to their start
         //This enables them to be played multiple times
-        shoot.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/shoot.wav"))));
-        bounce.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/bounce.wav"))));
-        hit.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/hit.wav"))));
-        death.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/death.wav"))));
+        shoot.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Gameplay/shoot.wav"))));
+        bounce.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Gameplay/bounce.wav"))));
+        hit.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Gameplay/hit.wav"))));
+        death.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Gameplay/death.wav"))));
         
         this.tankData = tankData;
         this.player1 = player1;
@@ -127,6 +148,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //Health bars
         player1Health = new HealthBar(tank1.health, 300 * this.SCALE_X, 50 * this.SCALE_Y);
         player2Health = new HealthBar(tank2.health, 1220 * this.SCALE_X, 50 * this.SCALE_Y);
+
+        //Particles
+        particles = new ArrayList<Particles>();
 
         //Finishing the JFrame
         //setUndecorated(true) and then pack() causes the game to be run in Borderless Window mode
@@ -293,7 +317,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(shell1 != null && shell1.checkCollision(tank2))
         {
             shell1.move();
-            tank2.addDamage((int)shell1.getCenterX(), (int)shell1.getCenterY(), tank2.angle);
+            tank2.addDamage((int)shell1.getCenterX(), (int)shell1.getCenterY(), tank2.angle, shell1.angle);
             shell1.moveBack();
             if(shell1.checkPenetration(tank2))
             { 
@@ -306,6 +330,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                     death.start();
                     tank2.destroy();
                     player1Wins++;
+                    battleMusic.stop();
+                    tank1.playAnthem();
                 }
                 else
                 {
@@ -325,7 +351,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(shell2 != null && shell2.checkCollision(tank1))
         {
             shell2.move();
-            tank1.addDamage((int)shell2.getCenterX(), (int)shell2.getCenterY(), tank1.angle);
+            tank1.addDamage((int)shell2.getCenterX(), (int)shell2.getCenterY(), tank1.angle, shell2.angle);
             shell2.moveBack();
             if(shell2.checkPenetration(tank1))
             {
@@ -338,6 +364,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                     death.start();
                     tank1.destroy();
                     player2Wins++;
+                    battleMusic.stop();
+                    tank2.playAnthem();
+
                 }
                 else
                 {
@@ -385,6 +414,10 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             }
         }
 
+        for(int i = 0; i < particles.size(); i++)
+        {
+            particles.get(i).draw(g2d);
+        }
         g2d.setColor(player1Health.backgroundColor);
         g2d.fillRect(player1Health.background.x, player1Health.background.y, player1Health.background.width, player1Health.background.height);
         g2d.fillRect(player2Health.background.x, player2Health.background.y, player2Health.background.width, player2Health.background.height);
@@ -441,6 +474,19 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 shoot.setMicrosecondPosition(0);
                 shoot.start();
                 tank1.getTurret().shoot();
+                particles.add(new Particles(
+                    10, 
+                    tank1.getTurret().getAngle(), 
+                    15, 
+                    shell1.x - (shell1.width / 2), 
+                    shell1.y - (shell1.width / 2), 
+                    25, 
+                    2, 
+                    0.2, 
+                    -.02, 
+                    0.0075, 
+                    Color.GRAY.darker().darker().darker())
+                );
             }
         }
         if(e.getKeyCode() == 38)
@@ -475,6 +521,19 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
                 shell2 = new Shell(tank2.getTurret());
                 shoot.start();
                 tank2.getTurret().shoot();
+                particles.add(new Particles(
+                    10, 
+                    tank2.getTurret().getAngle(), 
+                    15, 
+                    shell2.x - (shell2.width / 2), 
+                    shell2.y - (shell2.width / 2), 
+                    25, 
+                    2, 
+                    0.2, 
+                    -.02, 
+                    0.0075, 
+                    Color.GRAY.darker().darker().darker())
+                );
             }
         }
     }
@@ -532,8 +591,10 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         }
     }
     
-    public void reset() throws InterruptedException, IOException
+    public void reset() throws InterruptedException, IOException, MidiUnavailableException, InvalidMidiDataException
     {
+        tank1.stopAnthem();
+        tank2.stopAnthem();
         timer = new Timer(16, this);
         tank1 = new Tank(100, 100, 128, 256, 0.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player1 +"TURRET.png")), tankData.get(player1));
         tank2 = new Tank(SCREENWIDTH - 100 - 256, SCREENHEIGHT - 100 - 128, 128, 256, 180.0, ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 + ".png")), ImageIO.read(getClass().getResourceAsStream("/Images/Tanks/TANK" + player2 +"TURRET.png")), tankData.get(player2));
@@ -549,5 +610,6 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         shell2 = null;
         player1Health.setProgress(tank1.health);
         player2Health.setProgress(tank2.health);
+        battleMusic.start();
     }
 }
