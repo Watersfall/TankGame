@@ -5,9 +5,11 @@
  */
 package com.watersfall.tankgame.game;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import com.watersfall.tankgame.Main;
 
 /**
  *
@@ -20,12 +22,25 @@ public class DamageEffect {
     public double angle;
     private BufferedImage image;
     
-    public DamageEffect(double x, double y, double angle) throws IOException
+    public DamageEffect(double x, double y, double angle, double otherAngle) throws IOException
     {
         this.x = x;
         this.y = y;
         this.angle = angle;
         this.image = ImageIO.read(getClass().getResourceAsStream("/Images/HitEffects/HIT0.png"));
+        Main.selectionFrame.frame.particles.add(new Particles(
+            10, 
+            otherAngle, 
+            15, 
+            this.x,
+            this.y, 
+            25, 
+            2, 
+            0.2, 
+            -.02, 
+            0.0075, 
+            Color.GRAY)
+        );
     }
     
     public void setLocation(double x, double y)

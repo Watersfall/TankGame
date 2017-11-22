@@ -10,6 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
+import com.watersfall.tankgame.ui.Frame;
 
 /**
  *

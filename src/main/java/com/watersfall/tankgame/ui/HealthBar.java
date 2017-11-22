@@ -1,6 +1,4 @@
 package com.watersfall.tankgame.ui;
-
-import com.watersfall.tankgame.game.Frame;
 import java.awt.Color;
 import java.awt.Rectangle;
 

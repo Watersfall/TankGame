@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
-
+import com.watersfall.tankgame.ui.Frame;
 import com.watersfall.tankgame.Main;
 
 /**
