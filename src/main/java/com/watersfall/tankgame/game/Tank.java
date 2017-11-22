@@ -8,19 +8,24 @@ package com.watersfall.tankgame.game;
 import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
 import javax.swing.Timer;
+import com.watersfall.tankgame.ui.Frame;
 
 /**
  *
@@ -48,10 +53,14 @@ public class Tank extends Rectangle2D implements ActionListener{
     public double angle;
     private Turret turret;
     private Image image;
-    private final int DELAY = 2500;
+    private final int DELAY = 7500;
     private Timer gameOverTimer;
     public double frontArmor, sideArmor, rearArmor, penetration, velocity, speed, turretRotation, tankRotation, reload, health, shellDamage;
+    public String nation;
     public ArrayList<DamageEffect> damage;
+    private InputStream anthemInput;
+    private Sequencer anthem;
+    
     
     //x: the x location of the tank
     //y: the y location of the tank
@@ -61,7 +70,7 @@ public class Tank extends Rectangle2D implements ActionListener{
     //image: the image the tank uses
     //turretImage: the image passed to the turret
     //data: the TankData object that contains the armor and other stats for the tank
-    public Tank(int x, int y, int height, int width, double angle, BufferedImage image, BufferedImage turretImage, TankData data) throws IOException
+    public Tank(int x, int y, int height, int width, double angle, BufferedImage image, BufferedImage turretImage, TankData data) throws IOException, MidiUnavailableException, InvalidMidiDataException
     {
         //Calling the super to create the basic rectangle
         super();
@@ -70,7 +79,7 @@ public class Tank extends Rectangle2D implements ActionListener{
         this.y = y;
         this.height = height * Frame.SCALE_Y;
         this.width = width * Frame.SCALE_X;
-        
+
         //Adding all the info to the tank from data
         frontArmor = java.lang.Double.parseDouble(data.tankData[1]);
         sideArmor = java.lang.Double.parseDouble(data.tankData[2]);
@@ -83,7 +92,14 @@ public class Tank extends Rectangle2D implements ActionListener{
         reload = java.lang.Double.parseDouble(data.tankData[9]) * 1000;
         health = java.lang.Double.parseDouble(data.tankData[10]);
         shellDamage = java.lang.Double.parseDouble(data.tankData[11]);
+        nation = data.tankData[12];
         
+        //Anthem
+        anthemInput = new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Music/Anthems/" + nation + ".mid"));
+        anthem = MidiSystem.getSequencer();
+        anthem.open();
+        anthem.setSequence(anthemInput);
+
         damage = new ArrayList<DamageEffect>();
         
         //Timer to reset the game after a player has won
@@ -504,6 +520,16 @@ public class Tank extends Rectangle2D implements ActionListener{
         gameOverTimer.start();
     }
 
+    public void playAnthem()
+    {
+        this.anthem.start();
+    }
+
+    public void stopAnthem()
+    {
+        this.anthem.stop();
+    }
+
     //Action listener for the timer
     //Calls the Frame's reset() method after DELAY milliseconds
     @Override
@@ -514,15 +540,15 @@ public class Tank extends Rectangle2D implements ActionListener{
             Main.selectionFrame.frame.reset();
             gameOverTimer.stop();
         } 
-        catch (InterruptedException | IOException ex) 
+        catch (InterruptedException | IOException | MidiUnavailableException | InvalidMidiDataException ex) 
         {
             Logger.getLogger(Tank.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void addDamage(int x, int y, double angle) throws IOException
+    public void addDamage(int x, int y, double angle, double otherAngle) throws IOException
     {
-        damage.add(new DamageEffect(x + (this.x - x) / 8, y + (this.y - y) / 8, angle));
+        damage.add(new DamageEffect(x + (this.x - x) / 8, y + (this.y - y) / 8, angle, otherAngle));
     }
 
     @Override
