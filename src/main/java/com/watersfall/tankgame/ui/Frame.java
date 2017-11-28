@@ -435,7 +435,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     {
         if(e.getKeyChar() == '')
         {
-            System.exit(0);
+            Main.optionsFrame.setVisible(true);
         }
     }
 

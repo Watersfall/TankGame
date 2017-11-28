@@ -7,6 +7,7 @@ package com.watersfall.tankgame;
 
 import com.watersfall.tankgame.ui.OptionsFrame;
 import com.watersfall.tankgame.ui.SelectionFrame;
+import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -32,9 +33,11 @@ public class Main {
     }  
 
     public static SelectionFrame selectionFrame;
+    public static OptionsFrame optionsFrame;
     public static void main(String[] args) throws IOException, MidiUnavailableException, InvalidMidiDataException
     {
+        optionsFrame = new OptionsFrame();
+        optionsFrame.setVisible(false);
         selectionFrame = new SelectionFrame();
-        //OptionsFrame optionsFrame = new OptionsFrame();
     }
 }

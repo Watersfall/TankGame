@@ -35,12 +35,12 @@ import javax.swing.JPanel;
  */
 public class SelectionFrame extends JFrame {
     
+    public Frame frame;
     //The things that will be added to the frame
     private JComboBox player1Box, player2Box, mapBox;
     private JLabel player1, player2, player1Info, player2Info;
     private JPanel panel;
     private JButton start;
-    public Frame frame;
     
     //The things that will be passed into the main game
     private int player1Selection, player2Selection, mapSelection;
@@ -167,7 +167,7 @@ public class SelectionFrame extends JFrame {
     }
     
     //Method to set the location and sizes of all the components
-    public void initFrame()
+    private void initFrame()
     {
         //Player 1 stuff, setting size and location
         player1Info.setSize(400, 400);
