@@ -1,4 +1,5 @@
 package com.watersfall.tankgame.ui;
+import com.watersfall.tankgame.Constants;
 import java.awt.Color;
 import java.awt.Rectangle;
 
@@ -15,8 +16,8 @@ public class HealthBar
     {
         this.x = x;
         this.y = y;
-        this.width = (int)(400 * Frame.SCALE_X);
-        this.height = (int)(40 * Frame.SCALE_Y);
+        this.width = (int)(400 * Constants.SCALE_X);
+        this.height = (int)(40 * Constants.SCALE_Y);
         this.maxValue = maxValue;
         this.backgroundColor = new Color(0, 0, 0);
         this.foregroundColor = new Color(255, 0, 0);

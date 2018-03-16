@@ -5,15 +5,17 @@
  */
 package com.watersfall.tankgame;
 
+import com.watersfall.tankgame.game.Sound;
 import com.watersfall.tankgame.ui.OptionsFrame;
 import com.watersfall.tankgame.ui.SelectionFrame;
-import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  *
@@ -34,8 +36,10 @@ public class Main {
 
     public static SelectionFrame selectionFrame;
     public static OptionsFrame optionsFrame;
-    public static void main(String[] args) throws IOException, MidiUnavailableException, InvalidMidiDataException
+    public static Sound sound;
+    public static void main(String[] args) throws IOException, MidiUnavailableException, InvalidMidiDataException, LineUnavailableException, UnsupportedAudioFileException
     {
+        sound = new Sound();
         optionsFrame = new OptionsFrame();
         optionsFrame.setVisible(false);
         selectionFrame = new SelectionFrame();

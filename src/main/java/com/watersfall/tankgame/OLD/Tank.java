@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.watersfall.tankgame.game;
+/*package com.watersfall.tankgame.game;
 
 import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.TankData;
@@ -26,11 +21,6 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;
 import javax.swing.Timer;
 import com.watersfall.tankgame.ui.Frame;
-
-/**
- *
- * @author Christopher
- */
 
 //Class that represents the tankData
 //Extends Rectangle because tankData are rectangles
@@ -638,3 +628,4 @@ public class Tank extends Rectangle2D implements ActionListener{
         return (int)Math.round(height);
     }
 }
+*/

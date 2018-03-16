@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.watersfall.tankgame.game;
+/*package com.watersfall.tankgame.game;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -15,11 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import com.watersfall.tankgame.ui.Frame;
-
-/**
- *
- * @author Christopher
- */
 
 //Future Class that will be used to create obstacles in the game
 //Trees, walls, etc.
@@ -141,3 +131,4 @@ public class Obstacle extends Rectangle {
         return shape.intersects(shell);
     }
 }
+*/

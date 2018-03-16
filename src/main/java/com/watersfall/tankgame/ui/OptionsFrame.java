@@ -1,6 +1,9 @@
 
 package com.watersfall.tankgame.ui;
 
+import com.watersfall.tankgame.Constants;
+import com.watersfall.tankgame.Main;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -48,7 +51,7 @@ public class OptionsFrame extends JFrame
     public OptionsFrame() throws IOException
     {
         super();
-        this.setSize(Frame.SCREENWIDTH, Frame.SCREENHEIGHT);
+        this.setSize(Constants.SCREENWIDTH, Constants.SCREENHEIGHT);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.panel = new JPanel();
@@ -97,6 +100,7 @@ public class OptionsFrame extends JFrame
             @Override
             public void stateChanged(ChangeEvent e) {
                 musicVolume = musicSlider.getValue();
+                Main.sound.setMusicVolume((float)musicVolume);
             }
         });
 
@@ -104,6 +108,7 @@ public class OptionsFrame extends JFrame
             @Override
             public void stateChanged(ChangeEvent e) {
                 effectsVolume = sfxSlider.getValue();
+                Main.sound.setEffectsVolume((float)effectsVolume);
             }
         });
 
@@ -175,43 +180,46 @@ public class OptionsFrame extends JFrame
         this.getContentPane().add(panel);
         this.setBackground(new Color(0, 0, 0, 0));
         panel.setBackground(new Color(127, 127, 127, 127));
+        this.setAlwaysOnTop(true);
         pack();
         setVisible(true);
         toFront();
         requestFocus();
         initMenu();
         initSettings();
+        Main.sound.setEffectsVolume((float)effectsVolume);
+        Main.sound.setMusicVolume((float)musicVolume);
     }
 
     private void initSettings()
     {
         
 
-        musicLabel.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2)); 
+        musicLabel.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
         musicLabel.setForeground(new Color(0, 0, 0, 255));
-        musicLabel.setLocation((int)(150 * Frame.SCALE_X), (int)(150 * Frame.SCALE_Y));
-        musicLabel.setSize(10 * Frame.FONTSIZE, 100);
+        musicLabel.setLocation((int)(150 * Constants.SCALE_X), (int)(150 * Constants.SCALE_Y));
+        musicLabel.setSize(10 * Constants.FONTSIZE, 100);
 
-        musicSlider.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2)); 
+        musicSlider.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
         musicSlider.setForeground(new Color(0, 0, 0, 255));
         musicSlider.setBackground(new Color(0, 0, 0, 0));
-        musicSlider.setLocation((int)(150 * Frame.SCALE_X), (int)(205 * Frame.SCALE_Y));
-        musicSlider.setSize((int)(200 * Frame.SCALE_X), 100);
+        musicSlider.setLocation((int)(150 * Constants.SCALE_X), (int)(205 * Constants.SCALE_Y));
+        musicSlider.setSize((int)(200 * Constants.SCALE_X), 100);
 
-        sfxLabel.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2)); 
+        sfxLabel.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
         sfxLabel.setForeground(new Color(0, 0, 0, 255));
-        sfxLabel.setLocation((int)(150 * Frame.SCALE_X), (int)(300 * Frame.SCALE_Y));
-        sfxLabel.setSize(10 * Frame.FONTSIZE, 100);
+        sfxLabel.setLocation((int)(150 * Constants.SCALE_X), (int)(300 * Constants.SCALE_Y));
+        sfxLabel.setSize(10 * Constants.FONTSIZE, 100);
 
-        sfxSlider.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2)); 
+        sfxSlider.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
         sfxSlider.setForeground(new Color(0, 0, 0, 255));
         sfxSlider.setBackground(new Color(0, 0, 0, 0));
-        sfxSlider.setLocation((int)(150 * Frame.SCALE_X), (int)(355 * Frame.SCALE_Y));
-        sfxSlider.setSize((int)(200 * Frame.SCALE_X), 100);
+        sfxSlider.setLocation((int)(150 * Constants.SCALE_X), (int)(355 * Constants.SCALE_Y));
+        sfxSlider.setSize((int)(200 * Constants.SCALE_X), 100);
 
-        exitButton.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2));
-        exitButton.setLocation((int)(1650 * Frame.SCALE_X), (int)(950 * Frame.SCALE_Y));
-        exitButton.setSize((int)(200 * Frame.SCALE_X), (int)(50 * Frame.SCALE_Y));
+        exitButton.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2));
+        exitButton.setLocation((int)(1650 * Constants.SCALE_X), (int)(950 * Constants.SCALE_Y));
+        exitButton.setSize((int)(200 * Constants.SCALE_X), (int)(50 * Constants.SCALE_Y));
         
         musicLabel.setVisible(false);
         musicSlider.setVisible(false);
@@ -222,19 +230,19 @@ public class OptionsFrame extends JFrame
 
     public void initMenu()
     {
-        returnButton.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2)); 
-        returnButton.setSize((int)(350 * Frame.SCALE_X), (int)(125 * Frame.SCALE_Y));
-        returnButton.setLocation((int)(1920 / 2 * Frame.SCALE_X - (returnButton.getWidth() / 2)), (int)(300 * Frame.SCALE_Y));
+        returnButton.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
+        returnButton.setSize((int)(350 * Constants.SCALE_X), (int)(125 * Constants.SCALE_Y));
+        returnButton.setLocation((int)(1920 / 2 * Constants.SCALE_X - (returnButton.getWidth() / 2)), (int)(300 * Constants.SCALE_Y));
         returnButton.setText("Return to Game");
 
-        settingsButton.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2)); 
-        settingsButton.setSize((int)(350 * Frame.SCALE_X), (int)(125 * Frame.SCALE_Y));
-        settingsButton.setLocation((int)(1920 / 2 * Frame.SCALE_X - (settingsButton.getWidth() / 2)), (int)(500 * Frame.SCALE_Y));
+        settingsButton.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
+        settingsButton.setSize((int)(350 * Constants.SCALE_X), (int)(125 * Constants.SCALE_Y));
+        settingsButton.setLocation((int)(1920 / 2 * Constants.SCALE_X - (settingsButton.getWidth() / 2)), (int)(500 * Constants.SCALE_Y));
         settingsButton.setText("Settings");
 
-        quitButton.setFont(new Font("Arial", Font.PLAIN, Frame.FONTSIZE / 2)); 
-        quitButton.setSize((int)(350 * Frame.SCALE_X), (int)(125 * Frame.SCALE_Y));
-        quitButton.setLocation((int)(1920 / 2 * Frame.SCALE_X - (quitButton.getWidth() / 2)), (int)(700 * Frame.SCALE_Y));
+        quitButton.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
+        quitButton.setSize((int)(350 * Constants.SCALE_X), (int)(125 * Constants.SCALE_Y));
+        quitButton.setLocation((int)(1920 / 2 * Constants.SCALE_X - (quitButton.getWidth() / 2)), (int)(700 * Constants.SCALE_Y));
         quitButton.setText("Exit Game");
     }
 }

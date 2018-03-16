@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.watersfall.tankgame.ui;
+/*package com.watersfall.tankgame.ui;
 
 import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.MapData;
@@ -44,11 +39,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-
-/**
- *
- * @author Christopher
- */
 
 //The main rendering class of the game
 //The Constructor creates the JFrame and adds the objects that will be rendered on the screen
@@ -613,3 +603,4 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         battleMusic.start();
     }
 }
+*/

@@ -28,7 +28,7 @@ public class DamageEffect {
         this.y = y;
         this.angle = angle;
         this.image = ImageIO.read(getClass().getResourceAsStream("/Images/HitEffects/HIT0.png"));
-        Main.selectionFrame.frame.particles.add(new Particles(
+        /*Main.selectionFrame.frame.particles.add(new Particles(
             10, 
             otherAngle, 
             15, 
@@ -40,7 +40,8 @@ public class DamageEffect {
             -.02, 
             0.0075, 
             Color.GRAY)
-        );
+            
+        );*/
     }
     
     public void setLocation(double x, double y)

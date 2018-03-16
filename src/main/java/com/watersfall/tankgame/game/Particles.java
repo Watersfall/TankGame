@@ -3,6 +3,7 @@ package com.watersfall.tankgame.game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import com.watersfall.tankgame.Objects.Particle;
 
 public class Particles
 {
@@ -37,11 +38,11 @@ public class Particles
         }
     }
 
-    public void draw(Graphics2D g2d)
+    public void draw(Graphics2D g2d, Renderer renderer)
     {
         for(int i = 0; i < particles.length; i++)
         {
-            particles[i].draw(g2d);
+            particles[i].draw(g2d, renderer);
         }
         update();
     }

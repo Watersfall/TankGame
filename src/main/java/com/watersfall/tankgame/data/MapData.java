@@ -5,7 +5,7 @@
  */
 package com.watersfall.tankgame.data;
 
-import com.watersfall.tankgame.game.Obstacle;
+import com.watersfall.tankgame.Objects.Obstacle;
 import java.awt.Color;
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class MapData {
         
         for(int i = 0; i < itemCount; i++)
         {
-            obstacles[i] = new Obstacle(data.substring(0, data.indexOf(":")).trim());
+            //obstacles[i] = new Obstacle(data.substring(0, data.indexOf(":")).trim());
             data = data.substring(data.indexOf(":") + 1);
         }
     }

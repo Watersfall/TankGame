@@ -5,24 +5,19 @@
  */
 package com.watersfall.tankgame.ui;
 
+import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Sequencer;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -33,9 +28,9 @@ import javax.swing.JPanel;
  *
  * @author Christopher
  */
-public class SelectionFrame extends JFrame {
+public class SelectionFrame extends JFrame implements KeyListener {
     
-    public Frame frame;
+    public GameFrame frame;
     //The things that will be added to the frame
     private JComboBox player1Box, player2Box, mapBox;
     private JLabel player1, player2, player1Info, player2Info;
@@ -46,22 +41,13 @@ public class SelectionFrame extends JFrame {
     private int player1Selection, player2Selection, mapSelection;
     private ArrayList<TankData> tankArray;
     private ArrayList<MapData> mapArray;
-
-    //Things to play the background music
-    private Sequencer music;
-    private InputStream musicInput;
-
     
     //SelectionFrame is the starting Frame for the game
     //This is where players will pick their vehicles, as well as be able to access the menu and settings for the game
     public SelectionFrame() throws IOException, MidiUnavailableException, InvalidMidiDataException
     {
-        musicInput = new BufferedInputStream(getClass().getResourceAsStream("/Sounds/Music/Anthem.midi"));
-        music = MidiSystem.getSequencer();
-        music.open();
-        music.setSequence(musicInput);
-        music.start();
-
+        Main.sound.playMusic("theme");
+        this.addKeyListener(this);
         //Standard JFrame things
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -130,15 +116,14 @@ public class SelectionFrame extends JFrame {
                 player1Selection = player1Box.getSelectedIndex();
                 player2Selection = player2Box.getSelectedIndex();
                 mapSelection = mapBox.getSelectedIndex();
-                try 
-                {
-                    frame = new Frame(player1Selection, player2Selection, tankArray, mapSelection, mapArray);
-                    music.stop();
-                } 
-                catch (IOException | LineUnavailableException | UnsupportedAudioFileException | MidiUnavailableException | InvalidMidiDataException ex) 
-                {
-                    Logger.getLogger(SelectionFrame.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+					frame = new GameFrame(player1Selection, player2Selection, tankArray, mapSelection, mapArray);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
                 }
+                Main.sound.stopMusic("theme");
+                setVisible(false);
             }
         });
 
@@ -252,4 +237,23 @@ public class SelectionFrame extends JFrame {
             }
         }
     }
+
+	@Override
+    public void keyTyped(KeyEvent e) 
+    {
+
+	}
+
+	@Override
+    public void keyPressed(KeyEvent e) 
+    {
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+            Main.optionsFrame.setVisible(true);
+	}
+
+	@Override
+    public void keyReleased(KeyEvent e) 
+    {
+		
+	}
 }

@@ -1,10 +1,11 @@
 
-package com.watersfall.tankgame.game;
+package com.watersfall.tankgame.Objects;
 
+import com.watersfall.tankgame.game.Renderer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class Particle
+public class Particle extends Sprite
 {
     private double x;
     private double y;
@@ -39,9 +40,16 @@ public class Particle
         color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (int)(velocity / initialVelocity * 255));
     }
 
-    public void draw(Graphics2D g2d)
+	@Override
+    public void draw(Graphics2D g2d, Renderer renderer) 
     {
-        g2d.setColor(this.color);
+		g2d.setColor(this.color);
         g2d.fillOval((int)x, (int)y, size, size);
-    }
+	}
+
+	@Override
+    public void update() 
+    {
+		this.move();
+	}
 }
