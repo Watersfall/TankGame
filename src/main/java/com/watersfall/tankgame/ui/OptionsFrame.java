@@ -182,7 +182,7 @@ public class OptionsFrame extends JFrame
         panel.setBackground(new Color(127, 127, 127, 127));
         this.setAlwaysOnTop(true);
         pack();
-        setVisible(true);
+        setVisible(false);
         toFront();
         requestFocus();
         initMenu();
@@ -193,8 +193,6 @@ public class OptionsFrame extends JFrame
 
     private void initSettings()
     {
-        
-
         musicLabel.setFont(new Font("Arial", Font.PLAIN, Constants.FONTSIZE / 2)); 
         musicLabel.setForeground(new Color(0, 0, 0, 255));
         musicLabel.setLocation((int)(150 * Constants.SCALE_X), (int)(150 * Constants.SCALE_Y));

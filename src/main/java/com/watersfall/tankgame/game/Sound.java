@@ -3,7 +3,6 @@ package com.watersfall.tankgame.game;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import javax.sound.sampled.FloatControl;
 import org.newdawn.easyogg.OggClip;
 
 public class Sound
@@ -40,18 +39,24 @@ public class Sound
 
     public void playMusic(String name)
     {
-        music.get(name).play();
+        playingSong = name;
+        music.get(playingSong).play();
     }
 
     public void playRandomMusic()
     {
-        playingSong = Integer.toString((int)Math.random() * SONG_COUNT);
+        playingSong = Integer.toString((int)(Math.random() * SONG_COUNT) + 1);
         this.playMusic(playingSong);
     }
 
     public void stopMusic(String name)
     {
         music.get(name).stop();
+    }
+
+    public void stopMusic()
+    {
+        music.get(playingSong).stop();
     }
 
     public void setEffectsVolume(float gain)

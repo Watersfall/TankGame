@@ -1,10 +1,13 @@
 package com.watersfall.tankgame.Objects;
 
 import com.watersfall.tankgame.game.Renderer;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 
@@ -15,6 +18,7 @@ public abstract class Sprite
     private double angle;
     private Image image;
     private AffineTransform transform;
+    private Color color;
 
     public Sprite()
     {
@@ -36,25 +40,29 @@ public abstract class Sprite
         this.image = image;
     }
 
+    public Sprite(float x, float y, int width, int height, double angle, Color color)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.angle = angle;
+        this.color = color;
+    }
+
     public abstract void draw(Graphics2D g2d, Renderer renderer);
 
     public boolean intersects(Sprite sprite)
     {
-        Rectangle ar = new Rectangle(this.getIntX(), this.getIntY(), this.getWidth(), this.getHeight());
-        Rectangle br = new Rectangle(sprite.getIntX(), sprite.getIntY(), sprite.getWidth(), sprite.getHeight());
+        Rectangle a = new Rectangle(this.getIntX(), this.getIntY(), this.getWidth(), this.getHeight());
+        Rectangle b = new Rectangle(sprite.getIntX(), sprite.getIntY(), sprite.getWidth(), sprite.getHeight());
         AffineTransform af = new AffineTransform();
         AffineTransform bf = new AffineTransform();
-        af.rotate(this.angle, this.getCenterX(), this.getCenterY());
-        bf.rotate(sprite.getAngle(), sprite.getCenterX(), sprite.getCenterY());
-        Area a = new Area(af.createTransformedShape(ar));
-        Area b = new Area(bf.createTransformedShape(br));
-
-        if(a.intersects(b.getBounds()) && b.intersects(a.getBounds()))
-        {
-            return true;
-        }
-
-        return false;
+        af.rotate(Math.toRadians(this.getAngle()), a.getCenterX(), a.getCenterY());
+        bf.rotate(Math.toRadians(sprite.getAngle()), b.getCenterX(), b.getCenterY());
+        Shape ra = af.createTransformedShape(a);
+        Shape rb = bf.createTransformedShape(b);
+        return (ra.intersects(rb.getBounds2D()) && rb.intersects(ra.getBounds2D()));
     }
 
     public void setX(float x)
@@ -153,6 +161,11 @@ public abstract class Sprite
     public Image getImage()
     {
         return image;
+    }
+
+    public Color getColor()
+    {
+        return color;
     }
 
     public float getCenterX()
