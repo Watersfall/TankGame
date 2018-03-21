@@ -5,7 +5,7 @@
  */
 package com.watersfall.tankgame;
 
-import com.watersfall.tankgame.game.Sound;
+import com.watersfall.tankgame.Sound.Sound;
 import com.watersfall.tankgame.ui.OptionsFrame;
 import com.watersfall.tankgame.ui.SelectionFrame;
 import java.awt.Graphics2D;
@@ -37,7 +37,7 @@ public class Main {
     public static SelectionFrame selectionFrame;
     public static OptionsFrame optionsFrame;
     public static Sound sound;
-    public static void main(String[] args) throws IOException, MidiUnavailableException, InvalidMidiDataException, LineUnavailableException, UnsupportedAudioFileException
+    public static void main(String[] args) throws IOException, MidiUnavailableException, InvalidMidiDataException, LineUnavailableException, UnsupportedAudioFileException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
         sound = new Sound();
         optionsFrame = new OptionsFrame();

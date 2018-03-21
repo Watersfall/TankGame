@@ -100,24 +100,24 @@ public class Tank extends Sprite
 
     public boolean checkPenetration(Shell shell)
     {
-        double angle = (Math.toDegrees(Math.atan2(shell.getCenterY() - this.getCenterY(), shell.getCenterX() - this.getCenterX())) - this.getAngle()) % 180;
-        //System.out.println(angle);
-        System.out.println(Math.abs(this.frontArmor / Math.cos(Math.toRadians(shell.getAngle() - this.getAngle()))));
+        double angle = (Math.toDegrees(Math.atan2(shell.getCenterY() - this.getCenterY(), shell.getCenterX() - this.getCenterX())) - (this.getAngle() % 180)) % 180;
+        System.out.println(angle);
+        //System.out.println(Math.abs(this.frontArmor / Math.cos(Math.toRadians(shell.getAngle() - this.getAngle()))));
         if(angle < 26.565 && angle > -26.565)
             if (Math.abs(this.frontArmor / Math.cos(Math.toRadians(shell.getAngle() - this.getAngle()))) < Math.abs(shell.getPenetration()))
                 return true;
             else
-                shell.bounce(this, this.FRONT);
+                shell.bounce(this, FRONT);
         else if((angle > 26.565 && angle < 153.435) || (angle < -26.565 && angle > -153.435))
             if (Math.abs(this.sideArmor / Math.sin(Math.toRadians(shell.getAngle() - this.getAngle()))) < Math.abs(shell.getPenetration()))
                 return true;
             else
-                shell.bounce(this, this.SIDE);
+                shell.bounce(this, SIDE);
         else
             if (Math.abs(this.rearArmor / Math.cos(Math.toRadians(shell.getAngle() - this.getAngle()))) < Math.abs(shell.getPenetration()))
                 return true;
             else
-                shell.bounce(this, this.BACK);
+                shell.bounce(this, BACK);
         return false;
     }
 

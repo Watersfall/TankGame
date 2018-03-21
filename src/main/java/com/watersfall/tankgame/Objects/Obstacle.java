@@ -19,12 +19,13 @@ public class Obstacle extends Sprite
 	@Override
     public void draw(Graphics2D g2d, Renderer renderer) 
     {
-		
+        g2d.rotate(Math.toRadians((this.getAngle())), this.getCenterX(), this.getCenterY());
+        g2d.drawImage(this.getImage(), this.getIntX(), this.getIntY(), this.getWidth(), this.getHeight(), renderer);
 	}
 
 	@Override
     public void update() 
     {
-		
+		//do absolutely nothing
 	}
 }

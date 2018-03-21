@@ -44,7 +44,7 @@ public class SelectionFrame extends JFrame implements KeyListener {
     
     //SelectionFrame is the starting Frame for the game
     //This is where players will pick their vehicles, as well as be able to access the menu and settings for the game
-    public SelectionFrame() throws IOException, MidiUnavailableException, InvalidMidiDataException
+    public SelectionFrame() throws IOException, MidiUnavailableException, InvalidMidiDataException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
         Main.sound.playMusic("theme");
         this.addKeyListener(this);
@@ -218,7 +218,7 @@ public class SelectionFrame extends JFrame implements KeyListener {
                         +  "</span></html>");
     }
 
-    public void loadMaps() throws IOException
+    public void loadMaps() throws IOException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
         mapArray = new ArrayList<MapData>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/Info/MAPS.txt")));

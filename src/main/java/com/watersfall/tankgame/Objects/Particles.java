@@ -1,11 +1,12 @@
 
-package com.watersfall.tankgame.game;
+package com.watersfall.tankgame.Objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import com.watersfall.tankgame.Objects.Particle;
+import com.watersfall.tankgame.game.Renderer;
 
-public class Particles
+public class Particles extends Sprite
 {
     private Particle[] particles;
     private double angle;
@@ -30,19 +31,26 @@ public class Particles
         }
     }
 
+    @Override
     public void update()
     {
         for(int i = 0; i < particles.length; i++)
         {
-            particles[i].move();
+            if(particles[i] != null)
+            {
+                particles[i].move();
+            }
+            
         }
     }
 
+    @Override
     public void draw(Graphics2D g2d, Renderer renderer)
     {
         for(int i = 0; i < particles.length; i++)
         {
-            particles[i].draw(g2d, renderer);
+            if (particles[i] != null)
+                particles[i].draw(g2d, renderer);
         }
         update();
     }

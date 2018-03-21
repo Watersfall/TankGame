@@ -2,6 +2,7 @@ package com.watersfall.tankgame.ui;
 
 import com.watersfall.tankgame.Constants;
 import com.watersfall.tankgame.Main;
+import com.watersfall.tankgame.Objects.Particles;
 import com.watersfall.tankgame.Objects.Shell;
 import com.watersfall.tankgame.Objects.Sprite;
 import com.watersfall.tankgame.Objects.Tank;
@@ -26,7 +27,7 @@ import javax.swing.Timer;
 public class GameFrame extends JFrame implements KeyListener, ActionListener
 {
     private Tank tank1, tank2;
-    private int player1Wins, player2Wins, player1Selection, player2Selection;
+    private int player1Wins, player2Wins, player1Selection, player2Selection, mapSelection;
     public Renderer renderer;
     private ArrayList<Sprite> drawables = new ArrayList<Sprite>();
     private final int DELAY = 16;
@@ -35,6 +36,8 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
     private Shell shell1, shell2;
     public AffineTransform old;
     private ArrayList<TankData> tankArray;
+    private ArrayList<MapData> mapArray;
+    private Thread destroy1, destroy2;
 
     public GameFrame()
     {
@@ -43,9 +46,32 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
 
     public GameFrame(int player1Selection, int player2Selection, ArrayList<TankData> tankArray, int mapSelection, ArrayList<MapData> mapArray) throws IOException 
     {
+        destroy1 = new Thread()
+        {   public void run()
+            {
+                tank1.destroy();
+                resetTimer.start();
+                Main.sound.stopMusic();
+                Main.sound.playMusic(tank2.getNation());
+            }
+        };
+
+        destroy2 = new Thread()
+        {   public void run()
+            {
+                tank2.destroy();
+                resetTimer.start();
+                Main.sound.stopMusic();
+                Main.sound.playMusic(tank1.getNation());
+            }
+        };
+        destroy2.setPriority(Thread.MAX_PRIORITY);
+        destroy1.setPriority(Thread.MAX_PRIORITY);
         this.player1Selection = player1Selection;
         this.player2Selection = player2Selection;
         this.tankArray = tankArray;
+        this.mapArray = mapArray;
+        this.mapSelection = mapSelection;
         timer = new Timer(DELAY, this);
         resetTimer = new Timer(RESET_DELAY, this);
         resetTimer.setRepeats(false);
@@ -76,6 +102,11 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
             tankArray.get(player2Selection)
         );
         drawables.add(tank2);
+
+        for(int i = 0; i < mapArray.get(mapSelection).obstacles.length; i++)
+        {
+            drawables.add(mapArray.get(mapSelection).obstacles[i]);
+        }
         initFrame();
     }
     
@@ -98,6 +129,9 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
     public void repaint(Graphics g)
     {
         Graphics2D g2d = (Graphics2D)g;
+        g2d.setColor(this.mapArray.get(mapSelection).color.darker());
+        g2d.fillRect(0, 0, Constants.SCREENWIDTH, Constants.SCREENHEIGHT);
+        
         this.old = g2d.getTransform();
         for(Sprite i : drawables)
         {
@@ -113,10 +147,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
         {
             if(tank1.checkPenetration(shell2))
             {
-                Main.sound.stopMusic();
-                Main.sound.playMusic(tank2.getNation());
-                tank1.destroy();
-                resetTimer.start();
+                destroy1.start();
             }
             shell2 = null;
         }
@@ -124,10 +155,7 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
         {
             if(tank2.checkPenetration(shell1))
             {
-                Main.sound.stopMusic();
-                Main.sound.playMusic(tank1.getNation());
-                tank2.destroy();
-                resetTimer.start();
+                destroy2.start();
             }
             shell1 = null;
         }
@@ -180,6 +208,19 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                     Color.ORANGE, 
                     tank2.getTurret().getShellData());
                 drawables.add(shell2);
+                drawables.add(new Particles(
+                    25, 
+                    tank2.getTurret().getAngle(), 
+                    15, 
+                    shell2.getX() - (shell2.getWidth() / 2), 
+                    shell2.getY() - (shell2.getWidth() / 2), 
+                    25, 
+                    2, 
+                    0.2, 
+                    -.02, 
+                    0.0075, 
+                    Color.GRAY.darker().darker().darker())
+                );
             }
         if(e.getKeyCode() == KeyEvent.VK_SPACE)
             if(tank1.getTurret().shoot())
@@ -193,6 +234,19 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                     Color.ORANGE, 
                     tank1.getTurret().getShellData());
                 drawables.add(shell1);
+                drawables.add(new Particles(
+                    25, 
+                    tank1.getTurret().getAngle(), 
+                    15, 
+                    shell1.getX() - (shell1.getWidth() / 2), 
+                    shell1.getY() - (shell1.getWidth() / 2), 
+                    25, 
+                    2, 
+                    0.2, 
+                    -.02, 
+                    0.0075, 
+                    Color.GRAY.darker().darker().darker())
+                );
             }
 	}
 
@@ -227,6 +281,25 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
 
     private void reset() throws IOException
     {
+        destroy1 = new Thread()
+        {   public void run()
+            {
+                tank1.destroy();
+                resetTimer.start();
+                Main.sound.stopMusic();
+                Main.sound.playMusic(tank2.getNation());
+            }
+        };
+
+        destroy2 = new Thread()
+        {   public void run()
+            {
+                tank2.destroy();
+                resetTimer.start();
+                Main.sound.stopMusic();
+                Main.sound.playMusic(tank1.getNation());
+            }
+        };
         drawables.clear();
         this.tank1 = new Tank(
             0, 
@@ -251,6 +324,10 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
             tankArray.get(player2Selection)
         );
         drawables.add(tank2);
+        for(int i = 0; i < mapArray.get(mapSelection).obstacles.length; i++)
+        {
+            drawables.add(mapArray.get(mapSelection).obstacles[i]);
+        }
         Main.sound.stopMusic();
         Main.sound.playRandomMusic();
     }

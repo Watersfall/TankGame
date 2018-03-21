@@ -3,24 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.watersfall.tankgame.game;
+package com.watersfall.tankgame.Objects;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import com.watersfall.tankgame.Main;
+import com.watersfall.tankgame.game.Renderer;
 
 /**
  *
  * @author Christopher
  */
-public class DamageEffect {
+public class DamageEffect extends Sprite{
     
     public double x;
     public double y;
     public double angle;
-    private BufferedImage image;
+    private Image image;
     
     public DamageEffect(double x, double y, double angle, double otherAngle) throws IOException
     {
@@ -49,24 +49,16 @@ public class DamageEffect {
         this.x = x;
         this.y = y;
     }
-    
-    public BufferedImage getImage()
+
+	@Override
+    public void draw(Graphics2D g2d, Renderer renderer) 
     {
-        return image;
-    }
-    
-    public int getX()
+		
+	}
+
+	@Override
+    public void update() 
     {
-        return (int)Math.round(x);
-    }
-    
-    public int getY()
-    {
-        return (int)Math.round(y);
-    }
-    
-    public int getAngle()
-    {
-        return (int)Math.round(angle);
-    }
+		
+	}
 }
