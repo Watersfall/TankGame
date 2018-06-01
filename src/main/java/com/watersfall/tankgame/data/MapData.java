@@ -23,6 +23,7 @@ public class MapData {
     public Obstacle[] obstacles;
     public String name;
     public Color color;
+    private String type;
     
     public MapData(String data) throws IOException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
@@ -50,8 +51,13 @@ public class MapData {
             angle = Integer.parseInt(data.substring(0, data.indexOf(",")).trim());
             data = data.substring(data.indexOf(",") + 1);
             image = ImageIO.read(getClass().getResourceAsStream("/Images/MapObjects/" + data.substring(0, data.indexOf(":")).trim() + ".png"));
+            type = data.substring(0, data.indexOf(":")).trim();
             data = data.substring(data.indexOf(":") + 1);
-            obstacles[i] = new Obstacle(x, y, width, height, angle, image);
+            
+            if(type.equalsIgnoreCase("tree"))
+                obstacles[i] = new Obstacle(x, y, width, height, width / 3, height / 3, angle, image);
+            else
+                obstacles[i] = new Obstacle(x, y, width, height, angle, image);
         }
     }
 }

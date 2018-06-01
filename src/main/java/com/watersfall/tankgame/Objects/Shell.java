@@ -22,6 +22,7 @@ public class Shell extends Sprite
         penetration = java.lang.Double.parseDouble(data.tankData[4]);
         velocity = java.lang.Double.parseDouble(data.tankData[5]) / 50.0;
         shellDamage = java.lang.Double.parseDouble(data.tankData[11]);
+        super.setType("SHELL");
     }
 
     public double getPenetration()
@@ -32,10 +33,15 @@ public class Shell extends Sprite
     public void bounce(Sprite sprite, int side)
     {
         Main.sound.playSound("bounce");
-        if(side == Tank.FRONT || side == Tank.BACK)
+        if(side == FRONT || side == BACK)
             this.setAngle((sprite.getAngle() + 180) * 2 - this.getAngle() - 180);
-        else if (side == Tank.SIDE)
+        else if (side == LEFT)
             this.setAngle((sprite.getAngle() * 2) - this.getAngle() + 180 - 180);
+    }
+
+    public double getDamage()
+    {
+        return this.shellDamage;
     }
 
 	@Override
@@ -48,9 +54,10 @@ public class Shell extends Sprite
 
 	public void update()
     {
+        //Since the shell updates ~8 times for every frame, it's movement is scaled down by 8
         this.setLocation(
-            (float)(this.getX() + this.velocity * Math.cos(Math.toRadians(this.getAngle()))),
-            (float)(this.getY() + this.velocity * Math.sin(Math.toRadians(this.getAngle())))
+            (float)(this.getX() + this.velocity * Math.cos(Math.toRadians(this.getAngle())) / 8),
+            (float)(this.getY() + this.velocity * Math.sin(Math.toRadians(this.getAngle())) / 8)
         );
     }
 }

@@ -178,6 +178,8 @@ public class SelectionFrame extends JFrame implements KeyListener {
         //Setting the map boxes size and location
         mapBox.setSize(200, 25);
         mapBox.setLocation(this.getWidth() / 2 - 100, this.getHeight() - this.getHeight() / 4);
+        this.requestFocus();
+        this.toFront();
     }
     
     //Method to load all the tank data in from the TANKS.txt file in the jar resources

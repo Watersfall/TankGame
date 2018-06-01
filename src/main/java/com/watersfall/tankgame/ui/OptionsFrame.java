@@ -125,7 +125,6 @@ public class OptionsFrame extends JFrame
                     quitButton.setVisible(true);
                     returnButton.setVisible(true);
                     settingsButton.setVisible(true);
-                    
                     musicLabel.setVisible(false);
                     musicSlider.setVisible(false);
                     sfxLabel.setVisible(false);
@@ -149,6 +148,7 @@ public class OptionsFrame extends JFrame
         returnButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                Main.selectionFrame.frame.unpause();
                 setVisible(false);
             }
         });
@@ -161,7 +161,6 @@ public class OptionsFrame extends JFrame
                 sfxLabel.setVisible(true);
                 sfxSlider.setVisible(true);
                 exitButton.setVisible(true);
-                
                 quitButton.setVisible(false);
                 returnButton.setVisible(false);
                 settingsButton.setVisible(false);

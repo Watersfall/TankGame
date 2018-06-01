@@ -52,6 +52,5 @@ public class Particles extends Sprite
             if (particles[i] != null)
                 particles[i].draw(g2d, renderer);
         }
-        update();
     }
 }

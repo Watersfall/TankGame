@@ -6,16 +6,6 @@
     "suppressTaskName": true,
     "tasks": [
         {
-            "taskName": "verify",
-            "args": ["-B", "verify"],
-            "isBuildCommand": true
-        },
-        {
-            "taskName": "test",
-            "args": ["-B", "test"],
-            "isTestCommand": true
-        },
-        {
             "taskName": "exec",
             "args": ["-B", "exec:java"]
         }

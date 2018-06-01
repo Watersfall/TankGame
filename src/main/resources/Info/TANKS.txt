@@ -1,6 +1,6 @@
 #Format:
 #,Tank Name, Front Armor, Side Armor, Rear Armor, Gun Penetration, Velocity, Speed, Turret Rotation Speed, Tank Rotation Speed, Reload Time, Crew Members, Shell Damage, Nation, END
-Sherman Firefly, 93.1, 38, 38, 187, 884, 40, 24, 1, 6, 5, 1.524, UK, END
+Sherman Firefly, 93.1, 38, 38, 248, 1204, 40, 24, 1, 6, 5, 1.524, UK, END
 Tiger I, 101, 80, 81, 161, 773, 45, 6, 1, 8, 5, 2.94, GER, END
 M4A3E2, 154, 76.2, 38, 154, 792, 35, 24, 1, 3, 5, 1.52, US, END
 Panther, 140, 40, 46.2, 185, 935, 46, 10, 1, 6, 5, 1.86, GER, END 
