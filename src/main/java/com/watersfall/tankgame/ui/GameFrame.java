@@ -7,6 +7,7 @@ import com.watersfall.tankgame.Objects.Particles;
 import com.watersfall.tankgame.Objects.Shell;
 import com.watersfall.tankgame.Objects.Sprite;
 import com.watersfall.tankgame.Objects.Tank;
+import com.watersfall.tankgame.data.Animation;
 import com.watersfall.tankgame.data.MapData;
 import com.watersfall.tankgame.data.TankData;
 import com.watersfall.tankgame.game.Renderer;
@@ -285,6 +286,24 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                         0.0075, 
                         Color.GRAY.darker().darker().darker())
                     );
+                    try 
+                    {
+						drawables.add(new Animation(
+                            (float)(tank2.getTurret().getCenterX() - (50 / 2) + ((tank2.getTurret().getWidth() / 2) * Math.cos(Math.toRadians(tank2.getTurret().getAngle())))), 
+                            (float)(tank2.getTurret().getCenterY() - (50 / 2) + ((tank2.getTurret().getWidth() / 2) * Math.sin(Math.toRadians(tank2.getTurret().getAngle())))),     
+                            50, 
+                            50, 
+                            shell2.getAngle(), 
+                            4, 
+                            4, 
+                            "shoot")
+                        );
+                    } 
+                    catch (IOException e1) 
+                    {
+						
+						e1.printStackTrace();
+					}
                 }
             if(e.getKeyCode() == KeyEvent.VK_SPACE)
                 if(tank1.getTurret().shoot())
@@ -311,6 +330,24 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                         0.0075, 
                         Color.GRAY.darker().darker().darker())
                     );
+                    try 
+                    {
+						drawables.add(new Animation(
+                            (float)(tank1.getTurret().getCenterX() - (50 / 2) + ((tank1.getTurret().getWidth() / 2) * Math.cos(Math.toRadians(tank1.getTurret().getAngle())))), 
+                            (float)(tank1.getTurret().getCenterY() - (50 / 2) + ((tank1.getTurret().getWidth() / 2) * Math.sin(Math.toRadians(tank1.getTurret().getAngle())))),     
+                            50, 
+                            50, 
+                            shell1.getAngle(), 
+                            4, 
+                            4, 
+                            "shoot")
+                        );
+                    } 
+                    catch (IOException e1) 
+                    {
+						
+						e1.printStackTrace();
+					}
                 }
         }
 	}
@@ -442,6 +479,23 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                 {
                     if(tank1.checkPenetration(shell2))
                     {
+                        try 
+                        {
+							drawables.add(new Animation(
+                                shell2.getCenterX() - (50 / 2),
+                                shell2.getCenterY() - (50 / 2), 
+                                50, 
+                                50, 
+                                shell2.getAngle(), 
+                                5, 
+                                5, 
+                                "hit")
+                            );
+                        } 
+                        catch (IOException e1) 
+                        {
+							e1.printStackTrace();
+						}
                         if(tank1.damage(shell2.getDamage()))
                             destroy1.start();
                         player1Bar.setProgress(tank1.getHealth());
@@ -454,6 +508,23 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                 {
                     if(tank2.checkPenetration(shell1))
                     {
+                        try 
+                        {
+							drawables.add(new Animation(
+                                shell1.getCenterX() - (50 / 2),
+                                shell1.getCenterY() - (50 / 2), 
+                                50, 
+                                50, 
+                                shell1.getAngle(), 
+                                5, 
+                                5, 
+                                "hit")
+                            );
+                        } 
+                        catch (IOException e1) 
+                        {
+							e1.printStackTrace();
+						}
                         if(tank2.damage(shell1.getDamage()))
                             destroy2.start();
                         player2Bar.setProgress(tank2.getHealth());

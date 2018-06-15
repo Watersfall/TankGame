@@ -51,17 +51,8 @@ public class Obstacle extends Sprite
     {
         if(!destroyed)
         {
-            Rectangle a = new Rectangle(this.getIntCollisionX(), this.getIntCollisionY(), this.getCollisionWidth(), this.getCollisionHeight());
-            AffineTransform af = new AffineTransform();
-            af.rotate(Math.toRadians(this.getAngle()), a.getCenterX(), a.getCenterY());
-            Shape ra = af.createTransformedShape(a);
-            g2d.setColor(Color.RED);
-            g2d.draw(ra);
-            g2d.setColor(Color.BLUE);
-            g2d.draw(ra.getBounds2D());g2d.rotate(Math.toRadians((this.getAngle())), this.getCenterX(), this.getCenterY());
+            g2d.rotate(Math.toRadians(this.getAngle()), this.getCenterX(), this.getCenterY());
             g2d.drawImage(this.getImage(), this.getIntX(), this.getIntY(), this.getWidth(), this.getHeight(), renderer);
-            g2d.setColor(Color.RED);
-            g2d.drawRect(this.getIntCollisionX(), this.getIntCollisionY(), this.getCollisionWidth(), this.getCollisionHeight());
         }
 	}
 

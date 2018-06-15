@@ -5,12 +5,9 @@ import com.watersfall.tankgame.Main;
 import com.watersfall.tankgame.data.TankData;
 import com.watersfall.tankgame.game.Renderer;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 public class Tank extends Sprite
 {
@@ -21,6 +18,7 @@ public class Tank extends Sprite
     private double frontArmor, sideArmor, rearArmor, speed, tankRotation, health;
     private String name, nation;
     private Turret turret;
+    private ArrayList<DamageEffect> damage;
     public boolean moveForward, moveBackward, turnLeft, turnRight;
     
     public Tank()
@@ -40,6 +38,7 @@ public class Tank extends Sprite
         this.health = java.lang.Double.parseDouble(data.tankData[10]);
         this.nation = data.tankData[12];
         this.turret = new Turret(x, y, turretImage.getWidth(null), turretImage.getHeight(null), angle, turretImage, data);
+        this.damage = new ArrayList<DamageEffect>();
     }
 
     public void moveForward()
@@ -340,15 +339,6 @@ public class Tank extends Sprite
 	@Override
     public void draw(Graphics2D g2d, Renderer renderer) 
     {
-        Rectangle a = new Rectangle(this.getIntCollisionX(), this.getIntCollisionY(), this.getCollisionWidth(), this.getCollisionHeight());
-        AffineTransform af = new AffineTransform();
-        af.rotate(Math.toRadians(this.getAngle()), a.getCenterX(), a.getCenterY());
-        Shape ra = af.createTransformedShape(a);
-        g2d.setColor(Color.RED);
-        g2d.draw(ra);
-        g2d.setColor(Color.BLUE);
-        g2d.draw(ra.getBounds());g2d.rotate(Math.toRadians((this.getAngle())), this.getCenterX(), this.getCenterY());
-        g2d.setTransform(Main.selectionFrame.frame.old);
 		g2d.rotate(Math.toRadians(this.getAngle()), this.getCenterIntX(), this.getCenterIntY());
         g2d.drawImage(this.getImage(), this.getIntX(), this.getIntY(), this.getWidth(), this.getHeight(), renderer);
         g2d.setTransform(Main.selectionFrame.frame.old);
