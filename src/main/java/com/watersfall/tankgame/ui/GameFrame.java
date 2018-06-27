@@ -296,7 +296,8 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                             shell2.getAngle(), 
                             4, 
                             4, 
-                            "shoot")
+                            "shoot",
+                            2)
                         );
                     } 
                     catch (IOException e1) 
@@ -340,7 +341,8 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                             shell1.getAngle(), 
                             4, 
                             4, 
-                            "shoot")
+                            "shoot",
+                            2)
                         );
                     } 
                     catch (IOException e1) 
@@ -489,7 +491,8 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                                 shell2.getAngle(), 
                                 5, 
                                 5, 
-                                "hit")
+                                "hit",
+                                2)
                             );
                         } 
                         catch (IOException e1) 
@@ -518,7 +521,8 @@ public class GameFrame extends JFrame implements KeyListener, ActionListener
                                 shell1.getAngle(), 
                                 5, 
                                 5, 
-                                "hit")
+                                "hit",
+                                2)
                             );
                         } 
                         catch (IOException e1) 

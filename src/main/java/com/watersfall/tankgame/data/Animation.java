@@ -16,6 +16,8 @@ public class Animation extends Sprite
     private boolean done = true;
     private int index = 0;
     private boolean reversed = false;
+    private int frameSkip;
+    private int frameCount;
 
     public Animation(float x, float y, int width, int height, double angle, int countX, int countY, String name) throws IOException
     {
@@ -38,6 +40,32 @@ public class Animation extends Sprite
         super.setImage(frames[index]);
         playing = true;
         done = false;
+        frameSkip = 1;
+        frameCount = 0;
+    }
+
+    public Animation(float x, float y, int width, int height, double angle, int countX, int countY, String name, int frameSkip) throws IOException
+    {
+        super(x, y, width, height, angle, new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR));
+        BufferedImage temp = ImageIO.read(this.getClass().getResourceAsStream("/Animation/" + name + ".png"));
+
+        int frameWidth = temp.getWidth() / countX;
+        int frameHeight = temp.getHeight() / countY;
+        frames = new BufferedImage[temp.getWidth() * temp.getHeight()];
+
+        int index = 0;
+        for(int i = 0; i < countY; i++)
+        {
+            for(int o = 0; o < countX; o++)
+            {
+                frames[index] = temp.getSubimage(o * frameWidth, i * frameHeight, frameWidth, frameHeight);
+                index++;
+            }
+        }
+        super.setImage(frames[index]);
+        playing = true;
+        done = false;
+        this.frameSkip = frameSkip;
     }
 
 	@Override
@@ -50,10 +78,17 @@ public class Animation extends Sprite
 	@Override
     public void update() 
     {
-        if(playing && !reversed)
+        frameCount++;
+        if(playing && !reversed && frameCount == frameSkip)
+        {
             this.index++;
-        if(playing && reversed)
+            frameCount = 0;
+        }
+        if(playing && reversed && frameCount == frameSkip)
+        {
             this.index--;
+            frameCount = 0;
+        }
         if(this.index > frames.length)
             done = true;
         if(this.index < 0)
